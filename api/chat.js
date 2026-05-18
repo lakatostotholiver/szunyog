@@ -142,30 +142,63 @@ export default async function handler(req, res) {
     content: String(m.content).slice(0, 2000),
   }));
 
-  try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...recentMessages],
-        max_tokens: 700,
-        temperature: 0.65,
-      }),
-    });
+  if (!process.env.GROQ_API_KEY) {
+    console.error('GROQ_API_KEY environment variable is missing');
+    return res.status(500).json({ error: 'GROQ_API_KEY missing on server' });
+  }
 
-    if (!response.ok) {
-      console.error('API error:', response.status, await response.text());
-      return res.status(502).json({ error: 'AI service unavailable' });
+  try {
+    const MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
+    let response;
+    let lastStatus = 0;
+    let lastErr = '';
+
+    for (const model of MODELS) {
+      try {
+        response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...recentMessages],
+            max_tokens: 700,
+            temperature: 0.65,
+          }),
+        });
+      } catch (netErr) {
+        lastErr = `network: ${netErr.message}`;
+        console.error(`Network error (${model}):`, netErr);
+        continue;
+      }
+
+      if (response.ok) break;
+
+      lastStatus = response.status;
+      lastErr = await response.text().catch(() => '');
+      console.error(`Groq API error (${model}):`, lastStatus, lastErr);
+
+      // 401/403 = invalid key → no point in retrying with another model
+      if (lastStatus === 401 || lastStatus === 403) {
+        return res.status(502).json({ error: 'AI service auth error' });
+      }
+      // For any other error (429, 5xx, 400 model_not_found, etc.) try the next model
+    }
+
+    if (!response || !response.ok) {
+      return res.status(502).json({
+        error: 'AI service unavailable',
+        status: lastStatus,
+        detail: lastErr?.slice(0, 500),
+      });
     }
 
     const data = await response.json();
     return res.status(200).json(data);
   } catch (err) {
     console.error('Handler error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error', detail: String(err?.message || err) });
   }
 }
