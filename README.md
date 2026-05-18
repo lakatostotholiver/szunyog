@@ -1,6 +1,6 @@
 # Csíplek Törökbálint! – Szúnyogmonitoring 2026
 
-React + Vite alapú webalkalmazás Törökbálint Város szúnyogmonitoring programjához.  
+React + Vite alapú webalkalmazás Törökbálint Város szúnyogmonitoring programjához.
 Tartalmaz egy AI chatbotot (BékaBot 🐸), amely Groq API-n keresztül válaszol.
 
 ---
@@ -39,37 +39,38 @@ A Vercel automatikusan felismeri a `api/chat.js` szerveroldali funkciót, a Bék
 
 ## Éles telepítés – Saját szerver (Node.js)
 
-Ha nem Vercel-t használsz, a `api/chat.js` fájlt át kell alakítani egy Express.js routerrá.
+Ha nem Vercelt használsz, kézzel kell elindítanod a szervert. A Groq API-kulcsát a helyi fejlesztéshez hasonlóan a `.env` fájlban kell tárolnod.
 
 ```bash
 npm install express cors dotenv
-```
-
-Készíts egy `server.js` fájlt:
-
-```js
-import express from 'express';
-import cors from 'cors';
-import { readFileSync } from 'fs';
-import 'dotenv/config';
-
-// Az api/chat.js handler logikáját ide kell másolni Express formátumba
-// A handler(req, res) függvényt app.post('/api/chat', handler) alakban hívd meg
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static('dist')); // vite build kimenete
-
-app.listen(3000, () => console.log('Szerver fut: http://localhost:3000'));
-```
-
-Majd build és indítás:
-
-```bash
 npm run build
 node server.js
 ```
+
+## Éles telepítés – Docker
+
+Ha a helyben telepített Node.js helyett egy konténert használnál, pár parancssal elindítható az alkalmazás – anélkül, hogy klónoznod kéne a repót, mert a Docker megteszi neked:
+
+```bash
+docker build -t szunyog github.com/lakatostotholiver/szunyog
+docker run -it -e GROQ_API_KEY=<API-kulcs> -p 3000:3000 szunyog
+```
+(az `<API-kulcs>`-ot értelemszerűen helyettesítve – `.env` fájl nem kell, a parancssori paraméter helyettesíti).
+
+### Docker Compose
+
+Bár egyetlen konténernél a Docker Compose igazi előnyei nem mutatkoznak meg, használható az is, a következő `docker-compose.yml` fájl létrehozásával (itt sem kell klónozni, lehet ez az egyetlen fájl a könyvtárban):
+
+```yaml
+services:
+  app:
+    build: https://github.com/lakatostotholiver/szunyog
+    ports:
+      - '3000:3000'
+    environment:
+      GROQ_API_KEY: '<API-kulcs>'
+```
+(az `<API-kulcs>`-ot itt is értelemszerűen helyettesítve).
 
 ---
 
@@ -105,4 +106,3 @@ src/
 - [React Router v7](https://reactrouter.com)
 - [Groq API](https://groq.com) (llama-3.3-70b-versatile modell)
 - CSS – egyedi design system, nincsenek UI framework függőségek
-
