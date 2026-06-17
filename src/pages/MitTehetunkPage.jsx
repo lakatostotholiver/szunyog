@@ -71,7 +71,9 @@ export default function MitTehetunkPage() {
                 <h4>Biológiai tabletta használata (Bti – Culinex)</h4>
                 <p>
                   Ha a vizet nem lehet lefedni (kerti tó, díszmedence, madáritató), használjon Bti-tablettát
-                  (pl. Culinex). Egy tabletta kb. 50 liter vízhez elegendő, néhány napig hatásos a szúnyoglárvák
+                  (pl. Culinex). Egy tabletta kb. <strong>50 liter vízhez</strong>, vagy kipermetezve
+                  kb. <strong>2 m² vízfelületre</strong> elegendő – ez utóbbi módszerrel sokkal nagyobb víztest
+                  kezelhető kevesebb tablettával. Néhány napig hatásos a szúnyoglárvák
                   ellen, miközben halakra, kétéltűekre, madarakra biztonságos.
                   Az Önkormányzat a tablettát <strong>ingyenesen</strong> biztosítja.
                 </p>
@@ -100,6 +102,8 @@ export default function MitTehetunkPage() {
               A tablettát a{' '}
               <a href="mailto:zoldjovo@torokbalint.hu"><strong>zoldjovo@torokbalint.hu</strong></a>{' '}
               címen igényelheti, és a Polgármesteri Hivatalban egyeztetett időpontban veheti át.
+              Az igénylés nem jelent automatikus kiadást: a tabletta odaítélése az adott helyzet
+              indokoltságától függ, amelyet minden esetben egyeztetünk az igénylővel.
               Ugyanezen a címen jelezhetik, ha <strong>szúnyogártalommal szennyezett gócpontot</strong> észlelnek.
             </p>
           </div>

@@ -34,6 +34,50 @@ export const monitoringSites = [
 
 export const measurements = [
   {
+    surveyDate: '2026-06-14',
+    reportDate: '2026-06-15',
+    publishDate: '2026-06-17',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 8, stages: ['L2', 'L3'], status: 'treated' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 5, stages: ['L2'], status: 'treated' },
+    ],
+    summary:
+      'A június 14-i monitoring eredmények alapján a Dulácska-patak medre több szakaszban száraz volt, a Hosszúréti-patakra merőleges csatorna (Tb-02-c) szintén kiszáradt. Csípőszúnyog-lárva fejlődést két ponton detektáltunk: az Átkötő utca menti pangó vízben (Tb-01f, 8 egyed/merítés, L2–L3 stádium) és a Széchenyi István téri díszkútban (Tb-06, 5 egyed, L2). Mindkét gócpont biológiai kezelése azonnal megtörtént. A hónapban lehullott csapadék mennyisége továbbra is rendkívül alacsony.',
+  },
+  {
+    surveyDate: '2026-05-21',
+    reportDate: '2026-05-25',
+    publishDate: '2026-05-25',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 13, stages: ['L3', 'L4'], status: 'treated' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A május 21-i monitoring eredmények alapján a Dulácska-patak medre több szakaszban száraz volt. A természetes vízterekben lárvafejlődés nem volt kimutatható. A Géza fejedelem útjától a Hosszúréti árokhoz vezető keskeny csatornaszakaszban kb. 20 méter hosszan pangóvíz alakult ki, amely lárvafertőzött volt (kb. 13 egyed/merítés). A biológiai kezelése megtörtént. Az egyéb közterületi vízterekben nem detektáltunk lárvákat.',
+  },
+  {
     surveyDate: '2026-05-07',
     reportDate: '2026-05-09',
     publishDate: '2026-05-10',
@@ -54,6 +98,28 @@ export const measurements = [
     ],
     summary:
       'A Dulácska-patak medre több szakaszban száraz volt, a korábban kezelt pontokon (Tb-01a, Tb-01c) lárvafejlődés nem volt kimutatható – a biológiai beavatkozás hatékonysága ismét igazolódott. Egyetlen új gócpontot azonosítottak: a Széchenyi István téri díszkútban 15 db lárvát (L2–L4 fejlettségi szakasz) találtak, amelyet helyben biológiai módszerrel kezeltek. Új mintavételi pontként bekerült a Hosszúréti-patakra merőleges csatorna (Tb-02-c), ahol lárvát nem találtak. Az aktív monitoring 13 helyszínt fedett le.',
+  },
+  {
+    surveyDate: '2026-04-22',
+    reportDate: '2026-04-24',
+    publishDate: '2026-04-24',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 30, stages: ['L2', 'L3'], status: 'treated' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A korábban kezelt vízterek lárvamentesek voltak, vagyis a biológiai kezelések hatásosnak bizonyultak. A Dulácska-patak medre több szakaszban száraz volt. A Géza fejedelem útjától a Hosszúréti árokhoz vezető keskeny csatornaszakaszban kb. 20 méter hosszan pangóvíz alakult ki, amely lárvafertőzött volt (30 egyed/merítés). A biológiai kezelése megtörtént. Az egyéb közterületi vízterekben nem detektáltunk lárvákat.',
   },
   {
     surveyDate: '2026-04-10',
@@ -107,12 +173,50 @@ export const statusLabels = {
 
 export const kpis = {
   totalSites: 13,
-  latestSurvey: '2026-05-07',
-  latestTreatedSites: 1,
-  latestCleanSites: 7,
+  latestSurvey: '2026-06-14',
+  latestTreatedSites: 2,
+  latestCleanSites: 6,
   latestDrySites: 5,
-  totalTreatmentsSeason: 5,
+  totalTreatmentsSeason: 8,
   seasonStart: '2026-03-01',
+};
+
+export const periodicReport = {
+  reportDate: '2026-05-31',
+  period: '2026. március 24. – május 31.',
+  title: 'Időszakos jelentés – 2026. szezon (március–május)',
+  ecologicalSummary:
+    'A 2025/26 tele rendkívül csapadékszegénynek bizonyult, a sokéves átlag töredéke esett. Áprilisban csupán egyetlen alkalommal esett csapadék (04.21-én 3,9 mm). A május közepén lehullott több mint 30 mm csapadék se okozott változást a száraz körülményekben.',
+  keyFindings: [
+    'Jelentősebb lárvafejlődést a Dulácska-patak vízmegállásos pangó víztereiben (Tb-01a, Tb-01b) tapasztalták a korai periódusban.',
+    'A biológiai kezelések (03.24. és 04.10.) hatékonysága 98–100%-os hatásfokúnak bizonyult.',
+    'A Dulácska-patakból begyűjtött lárvák fajbeazonosítása alapján Erdei szúnyogok (egygenerációs faj) – a megfelelő időben végzett kezelés kulcsfontosságú.',
+    'A Széchenyi téri Barátság-kútban (Tb-06) május 7-én lárvafejlődést detektáltak – a kitenyésztett egyedek Koreai szúnyogok voltak.',
+    'A Tb-02a-b-re merőleges csatorna (Tb-02-c) Culex pipiens fertőzöttséget mutatott az idén kétszer (máj. 7. és máj. 21.).',
+    'Minden biológiai kezelés hatékonynak bizonyult.',
+  ],
+  speciesIdentified: [
+    { species: 'Erdei szúnyog (Ochlerotatus)', location: 'Dulácska-patak (Tb-01a, Tb-01b)', note: 'Egygenerációs faj, korai kezelés kritikus' },
+    { species: 'Koreai szúnyog (Aedes koreicus)', location: 'Széchenyi téri Barátság-kút (Tb-06)', note: 'Idegenhonos faj, tavaly óta monitorozott' },
+    { species: 'Culex pipiens (Házi szúnyog)', location: 'Hosszúréti-patakra merőleges csatorna (Tb-02-c)', note: 'Kétszer detektált fertőzöttség' },
+  ],
+  adultMonitoring: {
+    status: 'Repülő alak átadás az önkormányzat részéről még nem történt.',
+    complaints: 'Magasabb repülő alak egyedszám miatt lakossági bejelentés eddig nem érkezett.',
+    floodRisk: 'Jelentősebb árhullám a Dunán nem vonult le, ártalom érkezése a hullámtérről egyelőre nem várható.',
+  },
+  co2TrappingSchedule: [
+    '2026.05.18', '2026.05.26', '2026.06.01', '2026.06.08', '2026.06.15',
+    '2026.06.22', '2026.06.29', '2026.07.06', '2026.07.13', '2026.07.20',
+    '2026.07.27', '2026.08.03', '2026.08.10', '2026.08.17', '2026.08.24',
+    '2026.08.31', '2026.09.07', '2026.09.14', '2026.09.21', '2026.09.28',
+  ],
+  recommendations: [
+    'A magánterületeken fejlődő idegenhonos fajok ellen a lakosságnak is fontos feladata odafigyelni és védekezni.',
+    'Repülő alakok ellen szúnyoghálóval, lárvák ellen letakarással, biológiai hatóanyagú tablettával stb.',
+    'Javasolt az önkormányzatnak felhívnia a lakosság figyelmét megfelelő kommunikációval, ismeretterjesztéssel, tablettaosztással.',
+    'Lakossági panasz esetén javasolt a bejelentés helyén történő mintavétel.',
+  ],
 };
 
 export const surveyData = {

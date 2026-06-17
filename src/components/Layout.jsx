@@ -117,7 +117,7 @@ export default function Layout() {
             </div>
           </div>
           <p className="footer-note">
-            Az eredeti mérési jegyzőkönyvek aláírva, pecséttel ellátva az Önkormányzatnál megtekinthetők.
+            A mérési jegyzőkönyvek digitális formában elérhetők, és kérésre megtekinthetők.
           </p>
         </div>
       </footer>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { measurements } from '../data/monitoringData';
+import { measurements, periodicReport } from '../data/monitoringData';
 import MonitoringTable from '../components/MonitoringTable';
 
 function formatDate(dateStr) {
@@ -32,7 +32,7 @@ export default function MonitoringPage() {
               <span className="lbl">hatékonyság a kezelt pontokon</span>
             </div>
             <div className="hero-stat">
-              <span className="val">5</span>
+              <span className="val">8</span>
               <span className="lbl">kezelés a 2026-os szezonban</span>
             </div>
             <div className="hero-stat">
@@ -40,8 +40,8 @@ export default function MonitoringPage() {
               <span className="lbl">monitorozott helyszín</span>
             </div>
             <div className="hero-stat">
-              <span className="val">3</span>
-              <span className="lbl">bejárás (márc–máj)</span>
+              <span className="val">6</span>
+              <span className="lbl">bejárás (márc–jún)</span>
             </div>
           </div>
 
@@ -58,7 +58,9 @@ export default function MonitoringPage() {
               <h3>Szakértői csapat</h3>
               <p>
                 A méréseket és a kezelést akkreditált entomológus szakemberek végzik.
-                A mérési jegyzőkönyvek aláírva, pecséttel ellátva az Önkormányzatnál megtekinthetők.
+                A mérési jegyzőkönyvek digitális formában elérhetők, és kérésre megtekinthetők.
+                (A nálunk rendelkezésre álló példányok digitális másolatok, nem nyomtatott,
+                aláírt-pecsételt eredeti dokumentumok.)
               </p>
             </div>
             <div className="method-card warn">
@@ -93,6 +95,80 @@ export default function MonitoringPage() {
 
           <p style={{ marginTop: '1.25rem', fontSize: '0.78rem', color: 'var(--muted)' }}>
             Közzététel: {formatDate(active.publishDate ?? active.reportDate)}
+          </p>
+        </div>
+      </section>
+
+      <section style={{ marginTop: '2.5rem' }}>
+        <div className="container">
+          <div className="section-header">
+            <div className="section-kicker">Szakértői összefoglaló</div>
+            <h2 className="section-title">{periodicReport.title}</h2>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+              Készítette: {periodicReport.period} | NO MOSQUITO Kft.
+            </p>
+          </div>
+
+          <div className="callout callout-info" style={{ marginTop: '1rem' }}>
+            <p><strong>Ökológiai háttér:</strong> {periodicReport.ecologicalSummary}</p>
+          </div>
+
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '1.5rem 0 0.75rem' }}>Főbb megállapítások</h3>
+          <ul style={{ paddingLeft: '1.25rem', lineHeight: 1.7, fontSize: '0.92rem' }}>
+            {periodicReport.keyFindings.map((f, i) => (
+              <li key={i} style={{ marginBottom: '0.4rem' }}>{f}</li>
+            ))}
+          </ul>
+
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '1.5rem 0 0.75rem' }}>Azonosított fajok a 2026-os szezonban</h3>
+          <div className="method-grid">
+            {periodicReport.speciesIdentified.map((s, i) => (
+              <div className="method-card bio" key={i}>
+                <h3>{s.species}</h3>
+                <p><strong>Helyszín:</strong> {s.location}</p>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{s.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '1.5rem 0 0.75rem' }}>Imágó egyedszám mérés</h3>
+          <div className="callout callout-warn">
+            <ul style={{ paddingLeft: '1.25rem', margin: 0, lineHeight: 1.7, fontSize: '0.92rem' }}>
+              <li>{periodicReport.adultMonitoring.status}</li>
+              <li>{periodicReport.adultMonitoring.complaints}</li>
+              <li>{periodicReport.adultMonitoring.floodRisk}</li>
+            </ul>
+          </div>
+
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '1.5rem 0 0.75rem' }}>CO₂ csapdázás ütemterve</h3>
+          <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+            A heti rendszerességű CO₂ csapdázás május 18-tól szeptember 28-ig tart.
+            A csapdázás célzottan naplemente körül zajlik, jellemzően néhány órán át –
+            a pontos időpont a körülményektől függően változhat. A CO₂ csapdázással
+            párhuzamosan humán csípésszámlálás is történik.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {periodicReport.co2TrappingSchedule.map((d, i) => (
+              <span key={i} style={{
+                background: 'var(--surface)',
+                borderRadius: '0.375rem',
+                padding: '0.25rem 0.6rem',
+                fontSize: '0.78rem',
+                border: '1px solid var(--border)',
+                fontFamily: 'monospace',
+              }}>{d}</span>
+            ))}
+          </div>
+
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '1.5rem 0 0.75rem' }}>Javaslatok</h3>
+          <ul style={{ paddingLeft: '1.25rem', lineHeight: 1.7, fontSize: '0.92rem' }}>
+            {periodicReport.recommendations.map((r, i) => (
+              <li key={i} style={{ marginBottom: '0.4rem' }}>{r}</li>
+            ))}
+          </ul>
+
+          <p style={{ marginTop: '1.25rem', fontSize: '0.78rem', color: 'var(--muted)' }}>
+            Forrás: NO MOSQUITO Kft. – Időszakos jelentés, Szeged, 2026. május 31.
           </p>
         </div>
       </section>

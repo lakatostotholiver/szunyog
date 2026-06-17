@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { measurements, kpis } from '../data/monitoringData';
+import { measurements, kpis, periodicReport } from '../data/monitoringData';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -31,7 +31,7 @@ export default function HomePage() {
             </div>
             <div className="hero-stat">
               <span className="val">{kpis.latestTreatedSites}</span>
-              <span className="lbl">kezelt terület (máj. 7.)</span>
+              <span className="lbl">kezelt terület (jún. 14.)</span>
             </div>
             <div className="hero-stat">
               <span className="val">{kpis.totalTreatmentsSeason}</span>
@@ -49,6 +49,39 @@ export default function HomePage() {
           </div>
 
           <div className="news-feed">
+            <div className="news-card">
+              <div className="news-card-accent" />
+              <div className="news-card-body">
+                <div className="news-card-meta">
+                  <span className="news-card-date">2026. május 31.</span>
+                  <span className="news-card-tag" style={{ background: 'var(--accent-light)', color: 'var(--accent)' }}>Időszakos jelentés</span>
+                </div>
+                <h3>{periodicReport.title}</h3>
+                <p>
+                  A NO MOSQUITO Kft. elkészítette a 2026-os szezon első időszakos jelentését.
+                  Összefoglalja a március 24. és május 31. közötti monitoring eredményeket,
+                  a fajbeazonosításokat és az ökológiai paraméterek alakulását.
+                </p>
+                <div className="news-card-stats">
+                  <div className="news-card-stat">
+                    <span className="val">98–100%</span>
+                    <span className="lbl">kezelési hatékonyság</span>
+                  </div>
+                  <div className="news-card-stat">
+                    <span className="val">3</span>
+                    <span className="lbl">azonosított faj</span>
+                  </div>
+                  <div className="news-card-stat">
+                    <span className="val">6</span>
+                    <span className="lbl">kezelés a szezonban</span>
+                  </div>
+                </div>
+                <Link to="/monitoring" className="news-card-link">
+                  Részletes jelentés megtekintése →
+                </Link>
+              </div>
+            </div>
+
             <div className="news-card">
               <div className={`news-card-accent${treatedCount > 0 ? ' treated' : ''}`} />
               <div className="news-card-body">
@@ -127,7 +160,7 @@ export default function HomePage() {
             <div className="cta-banner">
               <h2>Segítsen Ön is!</h2>
               <p>
-                Ha pangovízben lárvákat vagy szúnyoggócpontot észlel, jelezze az önkormányzatnak!
+                Ha pangóvízben lárvákat vagy szúnyoggócpontot észlel, jelezze az önkormányzatnak!
                 Ingyenes Culinex tabletta is igényelhető az e-mail címen.
               </p>
               <div className="cta-buttons">

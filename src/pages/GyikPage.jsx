@@ -123,8 +123,6 @@ const faqItems = [
         <p><strong>Rovartani (entomológiai) megfigyelés:</strong></p>
         <ul>
           <li>Csapdákkal és terepi megfigyelésekkel mérik a szúnyogok számát és fajösszetételét.</li>
-          <li>A hazai útmutatók csípésszám-alapú küszöbértékeket alkalmaznak (pl. 20–30 csípés/óra/fő),
-            amelyek túllépése esetén indokolt lehet a beavatkozás.</li>
         </ul>
         <p><strong>Vírustani (virológiai) vizsgálat:</strong></p>
         <ul>
