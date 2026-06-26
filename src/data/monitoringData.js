@@ -34,6 +34,28 @@ export const monitoringSites = [
 
 export const measurements = [
   {
+    surveyDate: '2026-06-23',
+    reportDate: '2026-06-24',
+    publishDate: '2026-06-26',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 35, stages: ['L2', 'L3', 'L4'], status: 'treated' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A június 23-i monitoring eredmények alapján csípőszúnyog-lárva fejlődést a Szabadság tér mentén, a Hosszúréti-patak kiszáradt medrének vízfoltjaiban detektáltunk (Tb-02a-b, 35 egyed/merítés, L2–L4 stádium). A góc biológiai kezelése megtörtént. A begyűjtött egyedek meghatározása alapján valamennyi a Culex pipiens (dalos szúnyog) fajhoz tartozott – ez vízfelszínre petéző, sokgenerációs faj, ezért a terület pangó víz kialakulása esetén folyamatos figyelmet igényel. A Dulácska-patak medre több szakaszban száraz volt. A hónapban lehullott csapadék mennyisége továbbra is rendkívül alacsony.',
+  },
+  {
     surveyDate: '2026-06-14',
     reportDate: '2026-06-15',
     publishDate: '2026-06-17',
@@ -173,11 +195,11 @@ export const statusLabels = {
 
 export const kpis = {
   totalSites: 13,
-  latestSurvey: '2026-06-14',
-  latestTreatedSites: 2,
+  latestSurvey: '2026-06-23',
+  latestTreatedSites: 1,
   latestCleanSites: 6,
-  latestDrySites: 5,
-  totalTreatmentsSeason: 8,
+  latestDrySites: 6,
+  totalTreatmentsSeason: 9,
   seasonStart: '2026-03-01',
 };
 
