@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BekaBot from './BekaBot';
 
 const MosquitoIcon = () => (
@@ -22,17 +22,42 @@ const navItems = [
 export default function Layout() {
   const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mainRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setMobileOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    const els = mainRef.current?.querySelectorAll('.reveal:not(.is-visible)') ?? [];
+    els.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
   return (
     <>
       <div className="top-bar">
-        Törökbálint Város Önkormányzata · Zöld Jövő Program ·{' '}
-        <a href="mailto:zoldjovo@torokbalint.hu">zoldjovo@torokbalint.hu</a>
+        <div className="container top-bar-inner">
+          <span className="top-bar-org">Törökbálint Város Önkormányzata · Zöld Jövő Program</span>
+          <a href="mailto:zoldjovo@torokbalint.hu" className="top-bar-contact">zoldjovo@torokbalint.hu</a>
+        </div>
       </div>
 
       <nav className="navbar">
@@ -55,23 +80,30 @@ export default function Layout() {
           </ul>
           <button
             className="nav-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Navigáció megnyitása"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label={mobileOpen ? 'Navigáció bezárása' : 'Navigáció megnyitása'}
+            aria-expanded={mobileOpen}
           >
-            {mobileOpen ? '✕' : '☰'}
+            <span className={`hamburger${mobileOpen ? ' is-open' : ''}`}>
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+            </span>
           </button>
         </div>
       </nav>
 
       <div className={`mobile-nav${mobileOpen ? ' open' : ''}`}>
-        {navItems.map((item) => (
-          <NavLink key={item.to} to={item.to} end={item.end}>
-            {item.label}
-          </NavLink>
-        ))}
+        <div className="mobile-nav-inner">
+          {navItems.map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.end}>
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
       </div>
 
-      <main>
+      <main ref={mainRef}>
         <Outlet />
       </main>
 

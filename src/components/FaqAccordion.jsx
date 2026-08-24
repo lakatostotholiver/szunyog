@@ -18,9 +18,9 @@ export default function FaqAccordion({ items }) {
   };
 
   return (
-    <div className="faq-list">
+    <div className="faq-list reveal-group">
       {items.map((item, i) => (
-        <div key={i} className={`faq-item${openIndex === i ? ' open' : ''}`}>
+        <div key={i} className={`faq-item reveal${openIndex === i ? ' open' : ''}`}>
           <button className="faq-question" onClick={() => toggle(i)}>
             {item.question}
             <ChevronIcon />

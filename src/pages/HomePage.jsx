@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
-import { measurements, kpis, periodicReport } from '../data/monitoringData';
+import { measurements, kpis, periodicReport, adultSpeciesMonitoring } from '../data/monitoringData';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatShortDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('hu-HU', { month: 'short', day: 'numeric' });
 }
 
 export default function HomePage() {
@@ -15,7 +20,7 @@ export default function HomePage() {
   return (
     <>
       <div className="hero">
-        <div className="hero-inner">
+        <div className="hero-inner enter">
           <div className="hero-kicker">Átláthatósági riport – 2026. szezon</div>
           <h1>Csíplek Törökbálint! – Szúnyogmonitoring</h1>
           <p className="hero-description">
@@ -30,8 +35,8 @@ export default function HomePage() {
               <span className="lbl">monitorozott helyszín</span>
             </div>
             <div className="hero-stat">
-              <span className="val">{kpis.latestTreatedSites}</span>
-              <span className="lbl">kezelt terület (jún. 14.)</span>
+              <span className="val">{kpis.latestCleanSites}</span>
+              <span className="lbl">tiszta helyszín ({formatShortDate(kpis.latestSurvey)})</span>
             </div>
             <div className="hero-stat">
               <span className="val">{kpis.totalTreatmentsSeason}</span>
@@ -48,8 +53,8 @@ export default function HomePage() {
             <h2 className="section-title">Legfrissebb események</h2>
           </div>
 
-          <div className="news-feed">
-            <div className="news-card">
+          <div className="news-feed reveal-group">
+            <div className="news-card reveal">
               <div className="news-card-accent" />
               <div className="news-card-body">
                 <div className="news-card-meta">
@@ -82,7 +87,32 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="news-card">
+            <div className="news-card reveal">
+              <div className="news-card-accent" />
+              <div className="news-card-body">
+                <div className="news-card-meta">
+                  <span className="news-card-date">2026. június 18.</span>
+                  <span className="news-card-tag">Fajazonosítás</span>
+                </div>
+                <h3>{adultSpeciesMonitoring.title}</h3>
+                <p>{adultSpeciesMonitoring.description}</p>
+                <div className="news-card-stats">
+                  <div className="news-card-stat">
+                    <span className="val">{adultSpeciesMonitoring.records.length}</span>
+                    <span className="lbl">befogási esemény</span>
+                  </div>
+                  <div className="news-card-stat">
+                    <span className="val">2</span>
+                    <span className="lbl">azonosított faj</span>
+                  </div>
+                </div>
+                <Link to="/monitoring" className="news-card-link">
+                  Fajazonosítási adatok megtekintése →
+                </Link>
+              </div>
+            </div>
+
+            <div className="news-card reveal">
               <div className={`news-card-accent${treatedCount > 0 ? ' treated' : ''}`} />
               <div className="news-card-body">
                 <div className="news-card-meta">
@@ -119,7 +149,7 @@ export default function HomePage() {
             {measurements.slice(1).map((m) => {
               const mTreated = m.results.filter((r) => r.status === 'treated').length;
               return (
-                <div className="news-card" key={m.surveyDate}>
+                <div className="news-card reveal" key={m.surveyDate}>
                   <div className={`news-card-accent${mTreated > 0 ? ' treated' : ''}`} />
                   <div className="news-card-body">
                     <div className="news-card-meta">
@@ -136,7 +166,7 @@ export default function HomePage() {
               );
             })}
 
-            <div className="news-card">
+            <div className="news-card reveal">
               <div className="news-card-accent" />
               <div className="news-card-body">
                 <div className="news-card-meta">

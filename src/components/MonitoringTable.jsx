@@ -1,8 +1,10 @@
 import { statusLabels, monitoringSites } from '../data/monitoringData';
+import { SwipeIcon } from './Icons';
 
 export default function MonitoringTable({ results }) {
   return (
-    <div className="table-wrapper">
+    <>
+    <div className="table-wrapper reveal">
       <table>
         <thead>
           <tr>
@@ -37,5 +39,7 @@ export default function MonitoringTable({ results }) {
         </tbody>
       </table>
     </div>
+    <p className="table-hint"><SwipeIcon /> Görgessen jobbra a további oszlopokért</p>
+    </>
   );
 }

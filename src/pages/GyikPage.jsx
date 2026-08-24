@@ -1,4 +1,5 @@
 import FaqAccordion from '../components/FaqAccordion';
+import { LeafIcon, WarningIcon, FlaskIcon } from '../components/Icons';
 
 const faqItems = [
   {
@@ -156,7 +157,7 @@ export default function GyikPage() {
   return (
     <>
       <div className="page-header">
-        <div className="page-header-inner">
+        <div className="page-header-inner enter">
           <div className="kicker">Gyakran ismételt kérdések</div>
           <h1>Amit a biológiai szúnyoggyérítésről tudni érdemes</h1>
           <p>
@@ -168,9 +169,9 @@ export default function GyikPage() {
 
       <section>
         <div className="container">
-          <div className="method-grid" style={{ marginBottom: '2rem' }}>
-            <div className="method-card bio">
-              <h3>🌿 Biológiai védekezés (Bti)</h3>
+          <div className="method-grid reveal-group" style={{ marginBottom: '2rem' }}>
+            <div className="method-card bio reveal">
+              <h3><span className="method-card-icon"><LeafIcon /></span>Biológiai védekezés (Bti)</h3>
               <p>
                 A <em>Bacillus thuringiensis israelensis</em> (Bti) talajbaktérium fehérjetoxinjait
                 juttatják a pangó vizekbe, ahol a szúnyoglárvák táplálkozás közben felveszik és elpusztulnak.
@@ -178,8 +179,8 @@ export default function GyikPage() {
                 rovarokra nem veszélyes. Nincs rezisztencia-kialakulás, nem szennyezi a talajt.
               </p>
             </div>
-            <div className="method-card warn">
-              <h3>⚠️ Kémiai (ködösítéses) irtás</h3>
+            <div className="method-card warn reveal">
+              <h3><span className="method-card-icon"><WarningIcon /></span>Kémiai (ködösítéses) irtás</h3>
               <p>
                 A melegködös eljárás szintetikus piretroid hatóanyagot (pl. deltametrin) permetez szét
                 a levegőben, amely <strong>nemcsak szúnyogokat, hanem méheket, szitakötőket és egyéb
@@ -189,8 +190,8 @@ export default function GyikPage() {
                 gyakorolt kedvezőtlen hatásokat jeleznek tartós expozíció esetén.
               </p>
             </div>
-            <div className="method-card info">
-              <h3>🔬 Miért a biológiai módszer?</h3>
+            <div className="method-card info reveal">
+              <h3><span className="method-card-icon"><FlaskIcon /></span>Miért a biológiai módszer?</h3>
               <p>
                 Törökbálint a <strong>megelőzésre</strong> épít: a lárvákat pusztítja el, mielőtt
                 kifejlett szúnyoggá válnak. A Duna–Ipoly Nemzeti Park Igazgatóság megerősítette,

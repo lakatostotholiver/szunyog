@@ -34,6 +34,72 @@ export const monitoringSites = [
 
 export const measurements = [
   {
+    surveyDate: '2026-07-26',
+    reportDate: '2026-07-27',
+    publishDate: '2026-07-27',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A július 26-i monitoring eredmények alapján csípőszúnyog-lárva fejlődést sehol nem detektáltunk. Az utolsó bejárás óta a lehullott csapadék mennyisége továbbra is rendkívül alacsony.',
+  },
+  {
+    surveyDate: '2026-07-16',
+    reportDate: '2026-07-17',
+    publishDate: '2026-07-17',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A július 16-i monitoring eredmények alapján csípőszúnyog-lárva fejlődést sehol nem detektáltunk. Az utolsó bejárás óta a lehullott csapadék mennyisége továbbra is rendkívül alacsony.',
+  },
+  {
+    surveyDate: '2026-07-05',
+    reportDate: '2026-07-07',
+    publishDate: '2026-07-07',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'A július 5-i monitoring eredmények alapján csípőszúnyog-lárva fejlődést sehol nem detektáltunk.',
+  },
+  {
     surveyDate: '2026-06-23',
     reportDate: '2026-06-24',
     publishDate: '2026-06-26',
@@ -195,9 +261,9 @@ export const statusLabels = {
 
 export const kpis = {
   totalSites: 13,
-  latestSurvey: '2026-06-23',
-  latestTreatedSites: 1,
-  latestCleanSites: 6,
+  latestSurvey: '2026-07-26',
+  latestTreatedSites: 0,
+  latestCleanSites: 7,
   latestDrySites: 6,
   totalTreatmentsSeason: 9,
   seasonStart: '2026-03-01',
@@ -239,6 +305,72 @@ export const periodicReport = {
     'Javasolt az önkormányzatnak felhívnia a lakosság figyelmét megfelelő kommunikációval, ismeretterjesztéssel, tablettaosztással.',
     'Lakossági panasz esetén javasolt a bejelentés helyén történő mintavétel.',
   ],
+};
+
+export const adultSpeciesMonitoring = {
+  title: 'Imágó fajazonosítás – CO₂-csapdázás és csípésszámlálás',
+  period: '2026. május 26. – június 18.',
+  description:
+    'A repülő (imágó) egyedek fajszintű azonosítása a heti CO₂-csapdázás és a humán csípésszámlálásos befogás során gyűjtött mintákból történt. Ez kiegészíti a monitoring helyszíneken végzett lárvavizsgálatokat: itt a lakott területeken ténylegesen csípő, kifejlett egyedek fajösszetételét látni.',
+  records: [
+    {
+      date: '2026-05-26',
+      method: 'CO2',
+      location: 'Katona József utca',
+      total: 1,
+      species: [{ name: 'Culex pipiens (Házi szúnyog)', count: 1 }],
+    },
+    {
+      date: '2026-06-03',
+      method: 'CO2',
+      location: 'Törökbálint Önkormányzat',
+      total: 6,
+      species: [
+        { name: 'Culex pipiens (Házi szúnyog)', count: 4 },
+        { name: 'Aedes koreicus / japonicus', count: 2 },
+      ],
+    },
+    {
+      date: '2026-06-10',
+      method: 'H',
+      location: 'Széchenyi tér, játszótér',
+      total: 3,
+      species: [{ name: 'Aedes koreicus (Koreai szúnyog)', count: 3 }],
+    },
+    {
+      date: '2026-06-10',
+      method: 'CO2',
+      location: 'Katona József utca',
+      total: 14,
+      species: [{ name: 'Culex pipiens (Házi szúnyog)', count: 14 }],
+    },
+    {
+      date: '2026-06-18',
+      method: 'H',
+      location: 'Széchenyi tér, játszótér',
+      total: 3,
+      species: [{ name: 'Aedes koreicus (Koreai szúnyog)', count: 3 }],
+    },
+    {
+      date: '2026-06-18',
+      method: 'H',
+      location: 'Anna-hegyi kilátó',
+      total: 6,
+      species: [{ name: 'Aedes koreicus / japonicus', count: 6 }],
+    },
+    {
+      date: '2026-06-18',
+      method: 'CO2',
+      location: 'Katona József utca',
+      total: 2,
+      species: [{ name: 'Culex pipiens (Házi szúnyog)', count: 2 }],
+    },
+  ],
+};
+
+export const monitoringMethodLabels = {
+  CO2: 'CO₂-csapda',
+  H: 'Csípésszámlálás',
 };
 
 export const surveyData = {

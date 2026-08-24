@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+import { CloseIcon, FrogIcon } from './Icons';
 
 const WELCOME =
-  'Szia! Én vagyok BékaBot 🐸 – a mindentudó. Kérdezz bátran a törökbálinti biológiai szúnyoggyérítésről, a mérési eredményekről, vagy arról, hogyan védheted meg a kerted a szúnyogoktól!';
+  'Szia! Én vagyok BékaBot – a mindentudó. Kérdezz bátran a törökbálinti biológiai szúnyoggyérítésről, a mérési eredményekről, vagy arról, hogyan védheted meg a kerted a szúnyogoktól!';
 
 export default function BekaBot() {
   const [open, setOpen] = useState(false);
@@ -36,12 +37,12 @@ export default function BekaBot() {
       const data = await res.json();
       const reply =
         data.choices?.[0]?.message?.content ||
-        'Sajnálom, nem sikerült választ generálni. Kérlek, próbáld újra! 🐸';
+        'Sajnálom, nem sikerült választ generálni. Kérlek, próbáld újra!';
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Kapcsolódási hiba lépett fel. Kérlek, próbáld újra! 🐸' },
+        { role: 'assistant', content: 'Kapcsolódási hiba lépett fel. Kérlek, próbáld újra!' },
       ]);
     } finally {
       setLoading(false);
@@ -60,24 +61,24 @@ export default function BekaBot() {
       {open && (
         <div className="bb-window" role="dialog" aria-label="BékaBot csevegőablak">
           <div className="bb-header">
-            <div className="bb-header-avatar">🐸</div>
+            <div className="bb-header-avatar"><FrogIcon /></div>
             <div className="bb-header-info">
               <div className="bb-header-name">BékaBot</div>
               <div className="bb-header-sub">a mindentudó · Törökbálint</div>
             </div>
-            <button className="bb-close" onClick={() => setOpen(false)} aria-label="Bezárás">✕</button>
+            <button className="bb-close" onClick={() => setOpen(false)} aria-label="Bezárás"><CloseIcon /></button>
           </div>
 
           <div className="bb-messages">
             {messages.map((m, i) => (
               <div key={i} className={`bb-row bb-row-${m.role}`}>
-                {m.role === 'assistant' && <div className="bb-avatar">🐸</div>}
+                {m.role === 'assistant' && <div className="bb-avatar"><FrogIcon /></div>}
                 <div className="bb-bubble">{m.content}</div>
               </div>
             ))}
             {loading && (
               <div className="bb-row bb-row-assistant">
-                <div className="bb-avatar">🐸</div>
+                <div className="bb-avatar"><FrogIcon /></div>
                 <div className="bb-bubble bb-typing">
                   <span /><span /><span />
                 </div>
@@ -118,11 +119,9 @@ export default function BekaBot() {
         aria-label={open ? 'BékaBot bezárása' : 'BékaBot megnyitása'}
       >
         {open ? (
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <CloseIcon />
         ) : (
-          <span className="bb-fab-icon">🐸</span>
+          <span className="bb-fab-icon"><FrogIcon /></span>
         )}
       </button>
     </div>

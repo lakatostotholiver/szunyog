@@ -2,7 +2,7 @@ export default function MitTehetunkPage() {
   return (
     <>
       <div className="page-header">
-        <div className="page-header-inner">
+        <div className="page-header-inner enter">
           <div className="kicker">Lakossági tájékoztató</div>
           <h1>Mit tehetünk a szúnyogok ellen?</h1>
           <p>
@@ -22,8 +22,8 @@ export default function MitTehetunkPage() {
             </p>
           </div>
 
-          <div className="tips-list" style={{ marginTop: '1.75rem' }}>
-            <div className="tip-item">
+          <div className="tips-list reveal-group" style={{ marginTop: '1.75rem' }}>
+            <div className="tip-item reveal">
               <div className="tip-number">1</div>
               <div>
                 <h4>A „10 perces szabály"</h4>
@@ -33,7 +33,7 @@ export default function MitTehetunkPage() {
                 </p>
               </div>
             </div>
-            <div className="tip-item">
+            <div className="tip-item reveal">
               <div className="tip-number">2</div>
               <div>
                 <h4>Esővízgyűjtők lezárása</h4>
@@ -44,7 +44,7 @@ export default function MitTehetunkPage() {
                 </p>
               </div>
             </div>
-            <div className="tip-item">
+            <div className="tip-item reveal">
               <div className="tip-number">3</div>
               <div>
                 <h4>Mikrovizek kiöntése</h4>
@@ -55,7 +55,7 @@ export default function MitTehetunkPage() {
                 </p>
               </div>
             </div>
-            <div className="tip-item">
+            <div className="tip-item reveal">
               <div className="tip-number">4</div>
               <div>
                 <h4>Ereszcsatornák takarítása</h4>
@@ -65,7 +65,7 @@ export default function MitTehetunkPage() {
                 </p>
               </div>
             </div>
-            <div className="tip-item">
+            <div className="tip-item reveal">
               <div className="tip-number">5</div>
               <div>
                 <h4>Biológiai tabletta használata (Bti – Culinex)</h4>
