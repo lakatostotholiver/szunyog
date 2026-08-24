@@ -39,5 +39,4 @@ export default createCrudHandler({
   },
   // Piszkozat nem kerül ki a nyilvános oldalra.
   publicView: (entry) => (entry.published ? entry : null),
-  filesOf: (entry) => [entry.coverUrl],
 });

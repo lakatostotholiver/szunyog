@@ -1,6 +1,11 @@
+import { lazy, Suspense, useCallback } from 'react';
 import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { egyeniGocpontok, uploadFile } from '../lib/cms';
 import { useCrudPage } from '../lib/useCrudPage';
+
+// A térkép (Leaflet) csak akkor töltődik le, amikor az űrlap megnyílik –
+// a nyilvános oldal látogatói így nem fizetnek érte.
+const LocationPicker = lazy(() => import('../components/LocationPicker'));
 
 const DISTRICTS = [
   'Újtelep',
@@ -31,6 +36,8 @@ const emptyForm = () => ({
   date: new Date().toISOString().slice(0, 10),
   district: DISTRICTS[0],
   address: '',
+  lat: null,
+  lng: null,
   contactName: '',
   contactPhone: '',
   internalNote: '',
@@ -50,6 +57,8 @@ const toFormValues = (entry) => ({
   date: entry.date ?? '',
   district: entry.district ?? DISTRICTS[0],
   address: entry.address ?? '',
+  lat: entry.lat ?? null,
+  lng: entry.lng ?? null,
   contactName: entry.contactName ?? '',
   contactPhone: entry.contactPhone ?? '',
   internalNote: entry.internalNote ?? '',
@@ -80,6 +89,11 @@ export default function AdminEgyeniGocpontokPage() {
     },
   });
   const { form, setForm, field } = crud;
+
+  const setLatLng = useCallback(
+    ({ lat, lng }) => setForm((f) => ({ ...f, lat, lng })),
+    [setForm]
+  );
 
   const handlePhotos = async (e) => {
     const files = Array.from(e.target.files ?? []);
@@ -148,6 +162,13 @@ export default function AdminEgyeniGocpontokPage() {
                   onChange={field('address')}
                 />
               </div>
+            </div>
+
+            <div className="form-field">
+              <label>Pontos helyszín a térképen</label>
+              <Suspense fallback={<p className="admin-upload-status">Térkép betöltése…</p>}>
+                <LocationPicker lat={form.lat} lng={form.lng} onChange={setLatLng} />
+              </Suspense>
             </div>
 
             <div className="form-row">

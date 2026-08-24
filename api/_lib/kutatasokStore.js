@@ -1,33 +1,26 @@
+import { createCollection } from './collection.js';
 import { readJson, writeJson } from './storage.js';
 
 const KEY = 'kutatasok.json';
 
+export const kutatasokCollection = createCollection(KEY, { sortBy: 'measuredAt' });
+
 export async function readKutatasok() {
-  const parsed = await readJson(KEY, []);
-  return Array.isArray(parsed) ? parsed : [];
+  return kutatasokCollection.list();
 }
 
 export async function appendKutatas(entry) {
-  const entries = await readKutatasok();
-  entries.push(entry);
-  await writeJson(KEY, entries);
+  // Az id-t a hívó adja (kompatibilitás miatt), ezért közvetlenül írunk.
+  const all = await readJson(KEY, []);
+  all.push(entry);
+  await writeJson(KEY, all);
   return entry;
 }
 
 export async function updateKutatas(id, patch) {
-  const entries = await readKutatasok();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return null;
-  entries[idx] = { ...entries[idx], ...patch, id, updatedAt: new Date().toISOString() };
-  await writeJson(KEY, entries);
-  return entries[idx];
+  return kutatasokCollection.update(id, patch);
 }
 
 export async function deleteKutatas(id) {
-  const entries = await readKutatasok();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return false;
-  entries.splice(idx, 1);
-  await writeJson(KEY, entries);
-  return true;
+  return kutatasokCollection.remove(id);
 }

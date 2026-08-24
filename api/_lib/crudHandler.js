@@ -1,5 +1,4 @@
 import { isAuthenticated } from './session.js';
-import { deleteFile } from './storage.js';
 
 function idFromUrl(req) {
   try {
@@ -17,7 +16,7 @@ function idFromUrl(req) {
  * és a nem publikált tartalmat – szerveroldalon, hogy a böngészőbe se jusson el.
  * Ha null-t ad vissza, a rekord egyáltalán nem kerül a válaszba.
  */
-export function createCrudHandler({ collection, buildFields, validate, publicView, filesOf }) {
+export function createCrudHandler({ collection, buildFields, validate, publicView }) {
   return async function handler(req, res) {
     try {
       const authed = isAuthenticated(req);
@@ -58,13 +57,10 @@ export function createCrudHandler({ collection, buildFields, validate, publicVie
         const removed = await collection.remove(id);
         if (!removed) return res.status(404).json({ error: 'Nem található bejegyzés.' });
 
-        // A bejegyzéshez tartozó feltöltött fájlok se maradjanak árván.
-        if (filesOf) {
-          for (const url of filesOf(removed)) {
-            if (url) await deleteFile(url);
-          }
-        }
-        return res.status(200).json({ ok: true });
+        // A bejegyzés a kukába kerül, nem semmisül meg – ezért a csatolt
+        // fájlokat sem töröljük itt, csak a kukából való végleges törléskor
+        // (lásd api/trash.js). Így a visszaállított bejegyzés teljes marad.
+        return res.status(200).json({ ok: true, trashed: true });
       }
 
       return res.status(405).json({ error: 'Method not allowed' });

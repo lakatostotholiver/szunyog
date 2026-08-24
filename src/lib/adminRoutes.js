@@ -13,6 +13,7 @@ export const ADMIN_ROUTES = {
   egyeni: `${ADMIN_BASE}/egyeni-gocpontok`,
   fajazonositas: `${ADMIN_BASE}/fajazonositas`,
   cikkek: `${ADMIN_BASE}/cikkek`,
+  mentes: `${ADMIN_BASE}/mentes`,
 };
 
 // Az admin navigáció egyetlen forrása – a kezdőlap és a fejléc is ezt használja.
@@ -43,5 +44,11 @@ export const ADMIN_NAV = [
     to: ADMIN_ROUTES.cikkek,
     label: 'Cikkek',
     description: 'Tájékoztató cikkek a Hírek oldalra és a főoldali hírfolyamba.',
+  },
+  {
+    to: ADMIN_ROUTES.mentes,
+    label: 'Mentés és kuka',
+    description:
+      'Biztonsági mentés letöltése, és a törölt bejegyzések visszaállítása 30 napon belül.',
   },
 ];

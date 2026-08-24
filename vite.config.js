@@ -10,6 +10,8 @@ import fajazonositasHandler from './api/fajazonositas.js'
 import cikkekHandler from './api/cikkek.js'
 import egyeniGocpontokHandler from './api/egyeni-gocpontok.js'
 import uploadHandler from './api/upload.js'
+import exportHandler from './api/export.js'
+import trashHandler from './api/trash.js'
 import { uploadsDir } from './api/_lib/storage.js'
 import { existsSync, createReadStream } from 'fs'
 import path from 'path'
@@ -86,6 +88,8 @@ export default defineConfig(({ mode }) => {
           mountApi(server, '/api/cikkek', cikkekHandler)
           mountApi(server, '/api/egyeni-gocpontok', egyeniGocpontokHandler)
           mountRawApi(server, '/api/upload', uploadHandler)
+          mountApi(server, '/api/trash', trashHandler)
+          mountRawApi(server, '/api/export', exportHandler)
           mountUploads(server)
         },
       },

@@ -11,6 +11,8 @@ import fajazonositasHandler from './api/fajazonositas.js';
 import cikkekHandler from './api/cikkek.js';
 import egyeniGocpontokHandler from './api/egyeni-gocpontok.js';
 import uploadHandler from './api/upload.js';
+import exportHandler from './api/export.js';
+import trashHandler from './api/trash.js';
 import { uploadsDir } from './api/_lib/storage.js';
 
 const app = express();
@@ -48,5 +50,10 @@ for (const [path, handler] of [
 }
 
 app.post('/api/upload', uploadHandler);
+
+app.get('/api/export', exportHandler);
+app.get('/api/trash', trashHandler);
+app.post('/api/trash', trashHandler);
+app.delete('/api/trash', trashHandler);
 
 app.listen(3000, () => console.log('Szerver fut: http://localhost:3000'));

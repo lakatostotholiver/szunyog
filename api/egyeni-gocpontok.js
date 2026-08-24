@@ -16,6 +16,13 @@ export const DISTRICTS = [
   'Egyéb / nem megadott',
 ];
 
+// Érvényes koordináta vagy null – hibás értékkel ne mentsünk félrevezető pontot.
+function coord(value, limit) {
+  const n = Number(value);
+  if (value === null || value === undefined || value === '' || Number.isNaN(n)) return null;
+  return Math.abs(n) <= limit ? Math.round(n * 1e6) / 1e6 : null;
+}
+
 export default createCrudHandler({
   collection,
   validate: (body) => {
@@ -29,6 +36,10 @@ export default createCrudHandler({
 
     // ── Csak adminban látható, személyes adat ────────────────────────────
     address: str(body.address),
+    // A térképen kijelölt pont: a háztartás azonosítására alkalmas, ezért
+    // ugyanolyan bizalmas, mint a cím – a publicView nem adja tovább.
+    lat: coord(body.lat, 90),
+    lng: coord(body.lng, 180),
     contactName: str(body.contactName),
     contactPhone: str(body.contactPhone),
     internalNote: str(body.internalNote),
@@ -73,5 +84,4 @@ export default createCrudHandler({
     };
   },
 
-  filesOf: (entry) => (entry.photos ?? []).map((p) => p.url),
 });

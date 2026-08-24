@@ -1,7 +1,6 @@
 import { randomUUID } from 'crypto';
 import { isAuthenticated } from './_lib/session.js';
 import { readMeresek, appendMeres, updateMeres, deleteMeres } from './_lib/meresekStore.js';
-import { deleteFile } from './_lib/storage.js';
 
 const VALID_STATUS = new Set(['clean', 'treated', 'dry']);
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
@@ -89,8 +88,8 @@ async function route(req, res) {
 
     const removed = await deleteMeres(id);
     if (!removed) return res.status(404).json({ error: 'Nem található mérés.' });
-    if (removed.reportFileUrl) await deleteFile(removed.reportFileUrl);
-    return res.status(200).json({ ok: true });
+    // Kukába kerül – a csatolt jegyzőkönyv csak végleges törléskor szűnik meg.
+    return res.status(200).json({ ok: true, trashed: true });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

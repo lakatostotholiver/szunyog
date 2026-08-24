@@ -15,6 +15,7 @@ import AdminMeresekPage from './pages/AdminMeresekPage';
 import AdminFajazonositasPage from './pages/AdminFajazonositasPage';
 import AdminCikkekPage from './pages/AdminCikkekPage';
 import AdminEgyeniGocpontokPage from './pages/AdminEgyeniGocpontokPage';
+import AdminMentesPage from './pages/AdminMentesPage';
 import { ADMIN_BASE } from './lib/adminRoutes';
 
 // Az admin útvonalak a Route path-hoz relatívak (nincs vezető "/").
@@ -55,6 +56,7 @@ export default function App() {
           element={<Protected><AdminFajazonositasPage /></Protected>}
         />
         <Route path={`${adminPath}/cikkek`} element={<Protected><AdminCikkekPage /></Protected>} />
+        <Route path={`${adminPath}/mentes`} element={<Protected><AdminMentesPage /></Protected>} />
       </Routes>
     </BrowserRouter>
   );

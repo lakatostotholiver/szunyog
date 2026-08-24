@@ -112,12 +112,16 @@ Amit itt elmentesz, **azonnal megjelenik a Főoldalon és a Mérések oldalon** 
 
 **Egyéni gócpontok** (`/801997752/egyeni-gocpontok`) – háztartásoknál végzett vizsgálatok fotókkal. Az űrlap két, vizuálisan elkülönített blokkra oszlik:
 
-- *Bizalmas – csak admin*: pontos cím, kapcsolattartó neve és telefonszáma, belső megjegyzés.
+- *Bizalmas – csak admin*: pontos cím, **térképen kijelölt koordináta** (OpenStreetMap), kapcsolattartó neve és telefonszáma, belső megjegyzés.
 - *Megosztható*: városrész, ingatlan- és gócponttípus, lárvamennyiség, kezelés, tanulság, fényképek.
 
 A nyilvános **Gócpont-példák** oldalra csak akkor kerül ki bármi, ha a *Megosztás mintaként* pipa be van téve, és akkor is **kizárólag a megosztható blokk** – a szűrés szerveroldalon történik (`publicView` az [api/egyeni-gocpontok.js](api/egyeni-gocpontok.js) fájlban), így a személyes adatok a böngészőbe se jutnak el.
 
 **Fajazonosítás** (`/801997752/fajazonositas`) – CO₂-csapdázás és csípésszámlálás befogási eredményei, befogásonként több fajjal; az egyedszámok automatikusan összeadódnak. A **Mérések** oldal fajazonosítási táblázatában jelenik meg.
+
+**Mentés és kuka** (`/801997752/mentes`) – „Mentés letöltése" gombbal az összes adat egyetlen JSON fájlba menthető. A törlés sehol nem végleges: a bejegyzés a **kukába** kerül, ahonnan **30 napig visszaállítható** (a csatolt fájlok is megmaradnak addig). Végleges törlés csak a kukából, külön megerősítéssel lehetséges.
+
+> A mentés bizalmas: tartalmazza az egyéni gócpontok pontos címét, térképi koordinátáját és a kapcsolattartók adatait. Ne kerüljön e-mailbe vagy megosztott meghajtóra.
 
 **Cikkek** (`/801997752/cikkek`) – tájékoztató cikkek címmel, bevezetővel, szöveggel és borítóképpel. A *Közzétéve* pipa nélkül piszkozat marad (a lakosság nem látja). A közzétett cikk megjelenik a **Hírek** oldalon (`/hirek`), saját cikkoldallal (`/hirek/<slug>`), és a főoldali hírfolyamban is, a dátuma szerinti helyen.
 
