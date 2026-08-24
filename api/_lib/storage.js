@@ -13,6 +13,9 @@ const blobEnabled = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 function resolveDataDir() {
   if (process.env.DIKTALAS_DATA_DIR) return process.env.DIKTALAS_DATA_DIR;
+  // Vercelen a projekt mappája csak olvasható; egyedül a /tmp írható (efemer,
+  // ezért ott a Blob store a támogatott megoldás – lásd README).
+  if (process.env.VERCEL) return '/tmp/szunyog-adatok';
   return path.resolve(PROJECT_ROOT, '..', 'szunyog-diktalas-data');
 }
 
@@ -42,8 +45,10 @@ export async function readJson(key, fallback = []) {
     }
   }
 
-  const file = ensureLocal(key, fallback);
+  // Olvasásnál egy írhatatlan/hiányzó tároló nem hiba: üres listát adunk vissza,
+  // hogy a publikus oldal akkor is betöltsön, ha a tárolás még nincs beállítva.
   try {
+    const file = ensureLocal(key, fallback);
     return JSON.parse(readFileSync(file, 'utf8'));
   } catch {
     return fallback;
@@ -62,8 +67,16 @@ export async function writeJson(key, value) {
     return value;
   }
 
-  ensureLocal(key, value);
-  writeFileSync(localFilePath(key), JSON.stringify(value, null, 2), 'utf8');
+  try {
+    ensureLocal(key, value);
+    writeFileSync(localFilePath(key), JSON.stringify(value, null, 2), 'utf8');
+  } catch (err) {
+    throw new Error(
+      `Nem sikerült menteni az adatokat (${err.code || err.message}). ` +
+        'Vercelen csatolj egy Blob store-t (BLOB_READ_WRITE_TOKEN), saját szerveren ' +
+        'pedig állítsd a DIKTALAS_DATA_DIR-t egy írható mappára.'
+    );
+  }
   return value;
 }
 

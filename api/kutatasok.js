@@ -34,6 +34,15 @@ function getIdFromUrl(req) {
 }
 
 export default async function handler(req, res) {
+  try {
+    return await route(req, res);
+  } catch (err) {
+    console.error('kutatasok handler failed:', err);
+    return res.status(500).json({ error: err.message || 'Szerverhiba.' });
+  }
+}
+
+async function route(req, res) {
   if (req.method === 'GET') {
     const entries = (await readKutatasok()).sort((a, b) => (a.measuredAt < b.measuredAt ? 1 : -1));
     return res.status(200).json({ entries });
