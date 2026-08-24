@@ -80,7 +80,8 @@ services:
 |---|---|---|
 | `GROQ_API_KEY` | AI chatbot API kulcs | [console.groq.com](https://console.groq.com) (ingyenes) |
 | `DIKTALAS_PASSWORD` | Az admin felület közös jelszava (lásd lentebb) | te választod |
-| `DIKTALAS_DATA_DIR` | (opcionális) hova mentse a gócpont-kutatás bejegyzéseket | te választod |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob tároló – ettől lesznek az adatok Vercelen is tartósak | a Vercel automatikusan beállítja a Blob store csatolásakor |
+| `DIKTALAS_DATA_DIR` | (opcionális, csak Blob token nélkül) hova mentse a JSON adatokat és feltöltött fájlokat | te választod |
 
 ---
 
@@ -90,20 +91,38 @@ Nincs Firebase, nincs személyenkénti fiók – **egyetlen közös jelszóval**
 
 - Bejelentkezés: `/admin-belepes` (a nyilvános oldal lábléce is linkel rá: "Kollégáknak – admin belépés")
 - Admin felület: `/admin` – innen érhetők el az egyes szerkeszthető szekciók
-- **Gócpont-kutatások** (`/admin/gocpont-kutatasok`): terepi mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). Azonnal megjelenik a **Mérések** oldalon ("Gócpont-kutatások" szekció, percenként frissül).
 
-A bejegyzések egy szerveroldali JSON fájlban élnek (`api/_lib/kutatasokStore.js`), nem adatbázisban.
+### Mit lehet szerkeszteni?
+
+**Mérési körök** (`/admin/meresek`) – a NO MOSQUITO jelentések adatai, amiket eddig fejlesztőnek kellett kézzel kódba írnia:
+- bejárás / jelentés / közzététel dátuma,
+- **helyszínenként** (mind a 13 mintavételi pont) lárvaszám, állapot (Tiszta / Kezelés / Száraz) és fejlettségi stádium (L1–L4),
+- összefoglaló szöveg,
+- **PDF jelentés vagy kép csatolása** (max. 10 MB) – ez letölthető linkként jelenik meg a Mérések oldalon.
+
+Amit itt elmentesz, **azonnal megjelenik a Főoldalon és a Mérések oldalon** (a lapok percenként frissítenek), és a KPI-számok (tiszta helyszínek, kezelések száma, bejárások száma) is automatikusan újraszámolódnak. A 2026-os szezon korábbi körei továbbra is a kódban vannak (`src/data/monitoringData.js`); a két forrás dátum szerint összefésülve jelenik meg.
+
+**Gócpont-kutatások** (`/admin/gocpont-kutatasok`) – terepi csípésszámlálásos mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). A **Mérések** oldal "Gócpont-kutatások" szekciójában jelenik meg.
+
+### Hol tárolódnak az adatok?
+
+A tárolás automatikusan vált a környezet szerint (`api/_lib/storage.js`):
+
+| Környezet | Tároló | Tartós? |
+|---|---|---|
+| Vercel, `BLOB_READ_WRITE_TOKEN` beállítva | Vercel Blob | ✅ igen |
+| Saját szerver / VPS (`node server.js`) | JSON fájlok a `DIKTALAS_DATA_DIR` mappában | ✅ igen |
+| Vercel, Blob token **nélkül** | ideiglenes fájlrendszer | ❌ **elveszik** |
+
+> **Fontos:** Vercelen a Blob store csatolása nélkül a rögzített adatok elvesznek a következő deploynál. A csatolás a Vercel dashboardon: **Storage → Create/Connect Blob store → csatold a projekthez** – ezután a `BLOB_READ_WRITE_TOKEN` automatikusan bekerül a projekt környezeti változói közé, és egy újradeploy után minden tartós lesz.
 
 ### Egyszeri szerverbeállítás
 
-1. A szerveren (Vercel esetén a projekt Environment Variables résznél, self-hostnál a `.env`-ben) állítsd be:
-   - `DIKTALAS_PASSWORD` – a közös jelszó, amit a kollégák a bejelentkezéshez használnak
-   - `DIKTALAS_DATA_DIR` – (opcionális) hova mentse a rögzített bejegyzéseket tartalmazó JSON fájlt. Ha üresen hagyod, a projekt mappáján **kívül**, egy szülőmappában (`../szunyog-diktalas-data`) tárolja – ez azért fontos, mert így egy friss GitHub-klónozásos frissítés sem törli el a korábban rögzített adatokat. Ha az informatikus más módon deployol (pl. mindig teljesen új mappába telepít, vagy Vercelt használ, ahol a fájlrendszer amúgy sem tartós), adj meg egy **állandó, a projekt mappájától független** elérési utat.
-2. Vercelen a környezeti változó hozzáadása után **újra kell deployolni**; self-hostnál `npm run build` + a szerver (újra)indítása.
+1. Állítsd be a `DIKTALAS_PASSWORD`-öt (Vercelen: Project Settings → Environment Variables; self-hostnál a `.env`-ben) – ez a közös jelszó, amivel a kollégák belépnek.
+2. Vercelen: csatolj egy Blob store-t (lásd fentebb). Self-hostnál: opcionálisan add meg a `DIKTALAS_DATA_DIR`-t egy állandó, a projekt mappájától független útvonalra.
+3. Vercelen a környezeti változók módosítása után **újra kell deployolni**; self-hostnál `npm run build` + a szerver (újra)indítása.
 
-Fontos: ez a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bármikor megváltoztatható és a szerver újraindításával azonnal érvényes – nem kell hozzá újra buildelni a kódot.
-
-> **Megjegyzés Vercelen futtatva:** a Vercel serverless függvényei nem tartós fájlrendszert használnak – minden deploy/újraindítás után elveszhet a `DIKTALAS_DATA_DIR`-ba mentett JSON fájl, ha nincs külön, tartós tárhelyre (pl. Vercel Blob, külső adatbázis) mutatva. Self-hosted (saját szerver/VPS) környezetben ez nem probléma.
+Fontos: a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bármikor megváltoztatható és a szerver újraindításával azonnal érvényes – nem kell hozzá újra buildelni a kódot.
 
 ---
 
@@ -112,12 +131,16 @@ Fontos: ez a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bár
 ```
 api/
   chat.js          – BékaBot AI backend (Vercel serverless function / server.js route)
-  kutatasok.js     – Gócpont-kutatás lista (GET), rögzítés (POST), szerkesztés (PATCH), törlés (DELETE)
+  meresek.js       – Mérési körök: lista (GET), felvitel (POST), szerkesztés (PATCH), törlés (DELETE)
+  kutatasok.js     – Gócpont-kutatás: lista (GET), rögzítés (POST), szerkesztés (PATCH), törlés (DELETE)
+  upload.js        – PDF/kép feltöltés (max. 10 MB, típusellenőrzéssel)
   auth/
     login.js, logout.js, session.js – admin közös jelszavas belépés (cookie session)
   _lib/
     session.js          – Session cookie aláírás/ellenőrzés (HMAC)
-    kutatasokStore.js    – JSON fájl alapú adattárolás a gócpont-kutatásokhoz
+    storage.js          – Tároló absztrakció: Vercel Blob vagy lokális JSON fájl
+    meresekStore.js     – Mérési körök adattárolása
+    kutatasokStore.js   – Gócpont-kutatások adattárolása
 src/
   components/
     BekaBot.jsx    – AI chatbot UI
@@ -128,13 +151,16 @@ src/
     AdminProtectedRoute.jsx – Jelszavas belépést igénylő route wrapper (/admin, /admin/*)
   lib/
     adminAuth.js         – Admin belépés/kilépés/session-ellenőrzés (saját API)
-    gocpontKutatas.js    – Gócpont-kutatás bejegyzések mentése/szerkesztése/törlése/olvasása (saját API)
+    meresek.js           – Mérési körök CRUD + fájlfeltöltés (saját API)
+    gocpontKutatas.js    – Gócpont-kutatás bejegyzések CRUD (saját API)
+    useAllMeasurements.js – Kódban lévő + admin felületen felvitt mérések összefésülése
   pages/
-    AdminLoginPage.jsx     – /admin-belepes
+    AdminLoginPage.jsx      – /admin-belepes
     AdminPage.jsx           – /admin (admin felület kezdőlap, szekciók)
+    AdminMeresekPage.jsx    – /admin/meresek (mérési körök + PDF feltöltés)
     AdminKutatasokPage.jsx  – /admin/gocpont-kutatasok (rögzítés + szerkesztés + törlés)
   data/
-    monitoringData.js – Mérési adatok
+    monitoringData.js – A 2026-os szezon korábbi mérései + felmérés/jelentés adatok
 ```
 
 ---

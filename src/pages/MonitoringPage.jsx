@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
-  measurements,
   kpis,
   periodicReport,
   adultSpeciesMonitoring,
   monitoringMethodLabels,
 } from '../data/monitoringData';
+import { useAllMeasurements } from '../lib/useAllMeasurements';
 import MonitoringTable from '../components/MonitoringTable';
 import GocpontKutatasTable from '../components/GocpontKutatasTable';
 import { SwipeIcon } from '../components/Icons';
@@ -31,8 +31,13 @@ const adultSpeciesRows = adultSpeciesMonitoring.records.flatMap((r) =>
 );
 
 export default function MonitoringPage() {
+  const measurements = useAllMeasurements();
   const [activeIndex, setActiveIndex] = useState(0);
-  const active = measurements[activeIndex];
+  const active = measurements[Math.min(activeIndex, measurements.length - 1)];
+  const treatmentsSeason = measurements.reduce(
+    (sum, m) => sum + m.results.filter((r) => r.status === 'treated').length,
+    0
+  );
   const [kutatasok, setKutatasok] = useState([]);
 
   useEffect(() => {
@@ -67,7 +72,7 @@ export default function MonitoringPage() {
         <div className="container">
           <div className="stat-strip">
             <div className="hero-stat">
-              <span className="val">{kpis.totalTreatmentsSeason}</span>
+              <span className="val">{treatmentsSeason}</span>
               <span className="lbl">kezelés a 2026-os szezonban</span>
             </div>
             <div className="hero-stat">
@@ -76,7 +81,7 @@ export default function MonitoringPage() {
             </div>
             <div className="hero-stat">
               <span className="val">{measurements.length}</span>
-              <span className="lbl">bejárás (márc–júl)</span>
+              <span className="lbl">bejárás a szezonban</span>
             </div>
           </div>
 
@@ -191,6 +196,14 @@ export default function MonitoringPage() {
 
           <p className="source-note">
             Közzététel: {formatDate(active.publishDate ?? active.reportDate)}
+            {active.reportFileUrl && (
+              <>
+                {' · '}
+                <a href={active.reportFileUrl} target="_blank" rel="noopener noreferrer">
+                  {active.reportFileName || 'Jelentés megnyitása'}
+                </a>
+              </>
+            )}
           </p>
         </div>
       </section>

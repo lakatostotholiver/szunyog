@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { measurements, kpis, periodicReport, adultSpeciesMonitoring } from '../data/monitoringData';
+import { kpis, periodicReport, adultSpeciesMonitoring } from '../data/monitoringData';
+import { useAllMeasurements } from '../lib/useAllMeasurements';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -12,10 +13,15 @@ function formatShortDate(dateStr) {
 }
 
 export default function HomePage() {
+  const measurements = useAllMeasurements();
   const latest = measurements[0];
   const treatedCount = latest.results.filter((r) => r.status === 'treated').length;
   const cleanCount = latest.results.filter((r) => r.status === 'clean').length;
   const totalLarvae = latest.results.reduce((sum, r) => sum + r.larvae, 0);
+  const treatmentsSeason = measurements.reduce(
+    (sum, m) => sum + m.results.filter((r) => r.status === 'treated').length,
+    0
+  );
 
   return (
     <>
@@ -35,11 +41,11 @@ export default function HomePage() {
               <span className="lbl">monitorozott helyszín</span>
             </div>
             <div className="hero-stat">
-              <span className="val">{kpis.latestCleanSites}</span>
-              <span className="lbl">tiszta helyszín ({formatShortDate(kpis.latestSurvey)})</span>
+              <span className="val">{cleanCount}</span>
+              <span className="lbl">tiszta helyszín ({formatShortDate(latest.surveyDate)})</span>
             </div>
             <div className="hero-stat">
-              <span className="val">{kpis.totalTreatmentsSeason}</span>
+              <span className="val">{treatmentsSeason}</span>
               <span className="lbl">kezelés a szezonban</span>
             </div>
           </div>

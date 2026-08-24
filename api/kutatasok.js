@@ -35,7 +35,7 @@ function getIdFromUrl(req) {
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    const entries = readKutatasok().sort((a, b) => (a.measuredAt < b.measuredAt ? 1 : -1));
+    const entries = (await readKutatasok()).sort((a, b) => (a.measuredAt < b.measuredAt ? 1 : -1));
     return res.status(200).json({ entries });
   }
 
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     }
 
     const entry = { id: randomUUID(), ...buildFields(body), createdAt: new Date().toISOString() };
-    appendKutatas(entry);
+    await appendKutatas(entry);
     return res.status(201).json({ entry });
   }
 
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Hiányzó dátum vagy helyszín.' });
     }
 
-    const updated = updateKutatas(id, buildFields(body));
+    const updated = await updateKutatas(id, buildFields(body));
     if (!updated) return res.status(404).json({ error: 'Nem található bejegyzés.' });
     return res.status(200).json({ entry: updated });
   }
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     const id = getIdFromUrl(req);
     if (!id) return res.status(400).json({ error: 'Hiányzó azonosító.' });
 
-    const ok = deleteKutatas(id);
+    const ok = await deleteKutatas(id);
     if (!ok) return res.status(404).json({ error: 'Nem található bejegyzés.' });
     return res.status(200).json({ ok: true });
   }

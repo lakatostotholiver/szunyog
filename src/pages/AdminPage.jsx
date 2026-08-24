@@ -3,9 +3,15 @@ import { logout } from '../lib/adminAuth';
 
 const sections = [
   {
+    to: '/admin/meresek',
+    title: 'Mérési körök',
+    description:
+      'Új bejárás felvitele a NO MOSQUITO jelentés alapján: helyszínenkénti lárvaszám, állapot, összefoglaló és PDF csatolása. Azonnal megjelenik a Főoldalon és a Mérések oldalon.',
+  },
+  {
     to: '/admin/gocpont-kutatasok',
     title: 'Gócpont-kutatások',
-    description: 'Terepi mérések rögzítése, szerkesztése és törlése – ez jelenik meg a Mérések oldalon.',
+    description: 'Terepi csípésszámlálásos mérések rögzítése, szerkesztése és törlése – a Mérések oldalon jelenik meg.',
   },
 ];
 

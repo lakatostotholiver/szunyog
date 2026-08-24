@@ -8,6 +8,7 @@ import GyikPage from './pages/GyikPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
 import AdminKutatasokPage from './pages/AdminKutatasokPage';
+import AdminMeresekPage from './pages/AdminMeresekPage';
 
 export default function App() {
   return (
@@ -32,6 +33,14 @@ export default function App() {
             element={
               <AdminProtectedRoute>
                 <AdminKutatasokPage />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="admin/meresek"
+            element={
+              <AdminProtectedRoute>
+                <AdminMeresekPage />
               </AdminProtectedRoute>
             }
           />
