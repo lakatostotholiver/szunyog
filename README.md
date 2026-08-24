@@ -124,7 +124,11 @@ A tárolás automatikusan vált a környezet szerint (`api/_lib/storage.js`):
 | Saját szerver / VPS (`node server.js`) | JSON fájlok a `DIKTALAS_DATA_DIR` mappában | ✅ igen |
 | Vercel, Blob token **nélkül** | ideiglenes fájlrendszer | ❌ **elveszik** |
 
-> **Fontos:** Vercelen a Blob store csatolása nélkül a rögzített adatok elvesznek a következő deploynál. A csatolás a Vercel dashboardon: **Storage → Create/Connect Blob store → csatold a projekthez** – ezután a `BLOB_READ_WRITE_TOKEN` automatikusan bekerül a projekt környezeti változói közé, és egy újradeploy után minden tartós lesz.
+**Az éles oldalon ez már be van állítva:** a `szunyog-public` nevű, *public* hozzáférésű Blob store hozzá van csatolva a projekthez, a `BLOB_READ_WRITE_TOKEN` mindhárom környezetben megvan, és az adatok tartósan megmaradnak.
+
+> A store-nak **public** hozzáférésűnek kell lennie, mert a feltöltött PDF jelentéseket a lakosság is letölti a Mérések oldalról. Egy *private* store esetén a feltöltés hibára fut (`Cannot use public access on a private store`).
+
+Ha valaha új Blob store-t kell csatolni: Vercel dashboard → **Storage → Connect Store** – ezután a `BLOB_READ_WRITE_TOKEN` automatikusan bekerül a projekt környezeti változói közé, és egy újradeploy után él.
 
 ### Egyszeri szerverbeállítás
 
