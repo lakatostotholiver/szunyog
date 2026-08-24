@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { egyeniGocpontok } from '../lib/cms';
+import Lightbox from '../components/Lightbox';
 
 function formatMonth(value) {
   const d = new Date(value);
@@ -12,6 +13,7 @@ export default function GocpontPeldakPage() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('mind');
+  const [viewer, setViewer] = useState({ photos: [], index: null });
 
   useEffect(() => {
     let cancelled = false;
@@ -86,11 +88,20 @@ export default function GocpontPeldakPage() {
                   <article className="case-card reveal" key={item.id}>
                     {item.photos?.length > 0 && (
                       <div className="case-card-photos">
-                        {item.photos.slice(0, 3).map((photo) => (
-                          <figure key={photo.url}>
-                            <img src={photo.url} alt={photo.caption || item.breedingSiteType} />
-                            {photo.caption && <figcaption>{photo.caption}</figcaption>}
-                          </figure>
+                        {item.photos.slice(0, 3).map((photo, i) => (
+                          <button
+                            type="button"
+                            className="case-photo"
+                            key={photo.url}
+                            onClick={() => setViewer({ photos: item.photos, index: i })}
+                            aria-label={`${photo.caption || item.breedingSiteType} – nagyítás`}
+                          >
+                            <img src={photo.url} alt={photo.caption || item.breedingSiteType} loading="lazy" />
+                            {photo.caption && <span className="case-photo-caption">{photo.caption}</span>}
+                            {i === 2 && item.photos.length > 3 && (
+                              <span className="case-photo-more">+{item.photos.length - 3}</span>
+                            )}
+                          </button>
                         ))}
                       </div>
                     )}
@@ -147,6 +158,13 @@ export default function GocpontPeldakPage() {
           )}
         </div>
       </section>
+
+      <Lightbox
+        photos={viewer.photos}
+        index={viewer.index}
+        onClose={() => setViewer({ photos: [], index: null })}
+        onNavigate={(index) => setViewer((v) => ({ ...v, index }))}
+      />
     </>
   );
 }

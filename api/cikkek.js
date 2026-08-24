@@ -32,6 +32,8 @@ export default createCrudHandler({
       tag: str(body.tag) || 'Tájékoztatás',
       coverUrl: str(body.coverUrl) || null,
       coverName: str(body.coverName) || null,
+      coverSize: Number(body.coverSize) || null,
+      coverType: str(body.coverType) || null,
       published: body.published !== false,
     };
   },

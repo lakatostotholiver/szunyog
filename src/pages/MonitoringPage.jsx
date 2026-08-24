@@ -12,6 +12,7 @@ import { SwipeIcon } from '../components/Icons';
 import { SeasonStatusChart, SeasonLarvaeChart } from '../components/SeasonChart';
 import { fetchKutatasok } from '../lib/gocpontKutatas';
 import { fajazonositas } from '../lib/cms';
+import Attachment from '../components/Attachment';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -211,16 +212,20 @@ export default function MonitoringPage() {
             </p>
           </div>
 
+          {active.reportFileUrl && (
+            <div className="attachment-block">
+              <h4 className="attachment-block-title">Csatolt jegyzőkönyv</h4>
+              <Attachment
+                url={active.reportFileUrl}
+                name={active.reportFileName}
+                size={active.reportFileSize}
+                type={active.reportFileType}
+              />
+            </div>
+          )}
+
           <p className="source-note">
             Közzététel: {formatDate(active.publishDate ?? active.reportDate)}
-            {active.reportFileUrl && (
-              <>
-                {' · '}
-                <a href={active.reportFileUrl} target="_blank" rel="noopener noreferrer">
-                  {active.reportFileName || 'Jelentés megnyitása'}
-                </a>
-              </>
-            )}
           </p>
         </div>
       </section>

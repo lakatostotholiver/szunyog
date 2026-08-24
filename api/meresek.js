@@ -25,6 +25,8 @@ function buildFields(body) {
     summary: str(body.summary),
     reportFileUrl: str(body.reportFileUrl) || null,
     reportFileName: str(body.reportFileName) || null,
+    reportFileSize: Number(body.reportFileSize) || null,
+    reportFileType: str(body.reportFileType) || null,
     results,
   };
 }

@@ -10,6 +10,9 @@ import fajazonositasHandler from './api/fajazonositas.js'
 import cikkekHandler from './api/cikkek.js'
 import egyeniGocpontokHandler from './api/egyeni-gocpontok.js'
 import uploadHandler from './api/upload.js'
+import { uploadsDir } from './api/_lib/storage.js'
+import { existsSync, createReadStream } from 'fs'
+import path from 'path'
 
 // A Vite dev middleware nyers Node res objektumot ad, amin nincs Express-szerű
 // res.status()/res.json() – ezeket pótoljuk, hogy a handlerek dev alatt is működjenek.
@@ -31,6 +34,26 @@ function mountApi(server, path, handler) {
       polyfillExpressRes(res)
       await handler(req, res)
     })
+  })
+}
+
+const MIME = {
+  '.pdf': 'application/pdf',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+}
+
+// Blob token nélkül a feltöltött fájlok a data mappába kerülnek – dev alatt
+// ezeket is ki kell szolgálni, különben a csatolt kép/PDF nem jelenik meg.
+function mountUploads(server) {
+  server.middlewares.use('/uploads', (req, res, next) => {
+    const name = path.basename(decodeURIComponent(req.url.split('?')[0]))
+    const file = path.join(uploadsDir(), name)
+    if (!name || !existsSync(file)) return next()
+    res.setHeader('Content-Type', MIME[path.extname(name).toLowerCase()] ?? 'application/octet-stream')
+    createReadStream(file).pipe(res)
   })
 }
 
@@ -63,6 +86,7 @@ export default defineConfig(({ mode }) => {
           mountApi(server, '/api/cikkek', cikkekHandler)
           mountApi(server, '/api/egyeni-gocpontok', egyeniGocpontokHandler)
           mountRawApi(server, '/api/upload', uploadHandler)
+          mountUploads(server)
         },
       },
     ],

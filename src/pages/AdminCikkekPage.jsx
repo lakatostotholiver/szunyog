@@ -1,5 +1,6 @@
 import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { cikkek, uploadFile } from '../lib/cms';
+import Attachment from '../components/Attachment';
 import { useCrudPage } from '../lib/useCrudPage';
 
 const TAGS = ['Tájékoztatás', 'Hír', 'Felhívás', 'Szakmai', 'Lakossági tipp'];
@@ -12,6 +13,8 @@ const emptyForm = () => ({
   body: '',
   coverUrl: null,
   coverName: null,
+  coverSize: null,
+  coverType: null,
   published: true,
 });
 
@@ -23,6 +26,8 @@ const toFormValues = (entry) => ({
   body: entry.body ?? '',
   coverUrl: entry.coverUrl ?? null,
   coverName: entry.coverName ?? null,
+  coverSize: entry.coverSize ?? null,
+  coverType: entry.coverType ?? null,
   published: entry.published !== false,
 });
 
@@ -47,8 +52,8 @@ export default function AdminCikkekPage() {
     if (!file) return;
     crud.setError('');
     try {
-      const { url, name } = await uploadFile(file);
-      setForm((f) => ({ ...f, coverUrl: url, coverName: name }));
+      const { url, name, size, type } = await uploadFile(file);
+      setForm((f) => ({ ...f, coverUrl: url, coverName: name, coverSize: size, coverType: type }));
     } catch (err) {
       crud.setError(err.message);
     } finally {
@@ -141,21 +146,15 @@ export default function AdminCikkekPage() {
           <div className="form-field">
             <label htmlFor="cover">Borítókép (nem kötelező)</label>
             <input id="cover" type="file" accept="image/*" onChange={handleCover} />
-            {form.coverUrl && (
-              <p className="admin-upload-status">
-                Csatolva:{' '}
-                <a href={form.coverUrl} target="_blank" rel="noopener noreferrer">
-                  {form.coverName || 'megnyitás'}
-                </a>{' '}
-                <button
-                  type="button"
-                  className="btn-link-danger"
-                  onClick={() => setForm((f) => ({ ...f, coverUrl: null, coverName: null }))}
-                >
-                  eltávolítás
-                </button>
-              </p>
-            )}
+            <Attachment
+              url={form.coverUrl}
+              name={form.coverName}
+              size={form.coverSize}
+              type={form.coverType}
+              onRemove={() =>
+                setForm((f) => ({ ...f, coverUrl: null, coverName: null, coverSize: null, coverType: null }))
+              }
+            />
           </div>
 
           <label className="admin-check">

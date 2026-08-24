@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { fetchMeresek, addMeres, updateMeres, deleteMeres, uploadFile } from '../lib/meresek';
+import Attachment from '../components/Attachment';
 import { monitoringSites, statusLabels } from '../data/monitoringData';
 
 const STAGE_OPTIONS = ['L1', 'L2', 'L3', 'L4'];
@@ -15,6 +16,8 @@ const emptyForm = () => ({
   summary: '',
   reportFileUrl: null,
   reportFileName: null,
+  reportFileSize: null,
+  reportFileType: null,
   results: blankResults(),
 });
 
@@ -27,6 +30,8 @@ function toFormValues(entry) {
     summary: entry.summary ?? '',
     reportFileUrl: entry.reportFileUrl ?? null,
     reportFileName: entry.reportFileName ?? null,
+    reportFileSize: entry.reportFileSize ?? null,
+    reportFileType: entry.reportFileType ?? null,
     results: monitoringSites.map((site) => {
       const existing = byCode.get(site.code);
       return existing
@@ -102,8 +107,8 @@ export default function AdminMeresekPage() {
     setUploading(true);
     setError('');
     try {
-      const { url, name } = await uploadFile(file);
-      setForm((f) => ({ ...f, reportFileUrl: url, reportFileName: name }));
+      const { url, name, size, type } = await uploadFile(file);
+      setForm((f) => ({ ...f, reportFileUrl: url, reportFileName: name, reportFileSize: size, reportFileType: type }));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -211,21 +216,21 @@ export default function AdminMeresekPage() {
             <label htmlFor="reportFile">Jelentés fájl (PDF vagy kép, max. 10 MB)</label>
             <input id="reportFile" type="file" accept=".pdf,image/*" onChange={handleFileChange} disabled={uploading} />
             {uploading && <p className="admin-upload-status">Feltöltés folyamatban…</p>}
-            {form.reportFileUrl && (
-              <p className="admin-upload-status">
-                Csatolva:{' '}
-                <a href={form.reportFileUrl} target="_blank" rel="noopener noreferrer">
-                  {form.reportFileName || 'megnyitás'}
-                </a>{' '}
-                <button
-                  type="button"
-                  className="btn-link-danger"
-                  onClick={() => setForm((f) => ({ ...f, reportFileUrl: null, reportFileName: null }))}
-                >
-                  eltávolítás
-                </button>
-              </p>
-            )}
+            <Attachment
+              url={form.reportFileUrl}
+              name={form.reportFileName}
+              size={form.reportFileSize}
+              type={form.reportFileType}
+              onRemove={() =>
+                setForm((f) => ({
+                  ...f,
+                  reportFileUrl: null,
+                  reportFileName: null,
+                  reportFileSize: null,
+                  reportFileType: null,
+                }))
+              }
+            />
           </div>
 
           <h3 style={{ marginBottom: 0 }}>Helyszínenkénti eredmények</h3>

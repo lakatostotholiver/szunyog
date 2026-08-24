@@ -73,7 +73,12 @@ export default async function handler(req, res) {
 
   try {
     const fileUrl = await putFile(key, buffer, contentType);
-    return res.status(201).json({ url: fileUrl, name: displayName });
+    return res.status(201).json({
+      url: fileUrl,
+      name: displayName,
+      size: buffer.length,
+      type: contentType,
+    });
   } catch (err) {
     console.error('Upload failed:', err);
     return res.status(500).json({ error: 'A feltöltés nem sikerült.' });

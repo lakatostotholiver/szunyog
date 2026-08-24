@@ -2722,16 +2722,30 @@ tr.admin-row-editing > td {
   gap: 2px;
   background: var(--border-light);
 }
-.case-card-photos figure {
+.case-photo {
   margin: 0;
+  padding: 0;
+  border: 0;
   position: relative;
+  display: block;
+  cursor: zoom-in;
+  background: none;
+  overflow: hidden;
 }
-.case-card-photos img {
+.case-photo img {
   width: 100%;
   height: 130px;
   object-fit: cover;
+  transition: transform 0.25s ease;
 }
-.case-card-photos figcaption {
+.case-photo:hover img {
+  transform: scale(1.05);
+}
+.case-photo:focus-visible {
+  outline: 2px solid var(--brand-mid);
+  outline-offset: -2px;
+}
+.case-photo-caption {
   position: absolute;
   left: 0;
   right: 0;
@@ -2740,6 +2754,17 @@ tr.admin-row-editing > td {
   font-size: 0.68rem;
   color: #fff;
   background: rgba(0, 0, 0, 0.55);
+  text-align: left;
+}
+.case-photo-more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .case-card-body {
@@ -2803,4 +2828,174 @@ tr.admin-row-editing > td {
 .admin-list-heading {
   font-size: 1.05rem;
   margin: 0 0 1rem;
+}
+
+/* ── Csatolmányok ── */
+
+.attachment-block {
+  margin-top: 1.25rem;
+}
+.attachment-block-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.attachment {
+  margin-top: 0.5rem;
+}
+
+.attachment-file {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  max-width: 100%;
+}
+.attachment-link:hover {
+  border-color: var(--brand-mid);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+}
+.attachment-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius);
+  background: var(--accent-light);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.attachment-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.attachment-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.attachment-size {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.attachment-image img {
+  max-width: 260px;
+  max-height: 170px;
+  width: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  object-fit: cover;
+}
+.attachment-image .attachment-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ── Képnagyító ── */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.88);
+  display: grid;
+  place-items: center;
+  padding: 2.5rem 1rem;
+  animation: enter-fade-up 0.2s ease both;
+}
+.lightbox-figure {
+  margin: 0;
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.lightbox-figure img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  margin: 0 auto;
+}
+.lightbox-figure figcaption {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  text-align: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.lightbox-counter {
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+.lightbox-close,
+.lightbox-nav {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.12);
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease;
+}
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.lightbox-close {
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  font-size: 2rem;
+  line-height: 1;
+}
+.lightbox-nav.prev { left: 1rem; }
+.lightbox-nav.next { right: 1rem; }
+
+@media (max-width: 640px) {
+  .lightbox-nav { width: 38px; height: 38px; font-size: 1.6rem; }
+  .lightbox-nav.prev { left: 0.35rem; }
+  .lightbox-nav.next { right: 0.35rem; }
 }

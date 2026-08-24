@@ -1,3 +1,5 @@
+import { prepareImage, formatFileSize } from './image';
+
 async function fail(res, fallback) {
   const data = await res.json().catch(() => ({}));
   throw new Error(data.error || fallback);
@@ -40,7 +42,22 @@ export const fajazonositas = createResource('/api/fajazonositas');
 export const cikkek = createResource('/api/cikkek');
 export const egyeniGocpontok = createResource('/api/egyeni-gocpontok');
 
-export async function uploadFile(file) {
+const MAX_UPLOAD = 10 * 1024 * 1024;
+
+export async function uploadFile(rawFile) {
+  // A képeket feltöltés előtt átméretezzük – enélkül egy telefonos fotó
+  // több megabájt lenne, ami lassú feltöltés és lassan betöltő oldal.
+  const file = await prepareImage(rawFile);
+
+  if (file.size > MAX_UPLOAD) {
+    throw new Error(
+      `A fájl túl nagy (${formatFileSize(file.size)}). A megengedett legnagyobb méret 10 MB.`
+    );
+  }
+  if (!file.type) {
+    throw new Error('Ismeretlen fájltípus. Tölts fel PDF, JPG, PNG vagy WebP fájlt.');
+  }
+
   const res = await fetch(`/api/upload?name=${encodeURIComponent(file.name)}`, {
     method: 'POST',
     headers: { 'Content-Type': file.type },
