@@ -1,9 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import chatHandler from './api/chat.js'
-import inviteHandler from './api/colleagues/invite.js'
-import notifyHandler from './api/reports/notify.js'
-import sendToResidentHandler from './api/reports/send-to-resident.js'
 import loginHandler from './api/auth/login.js'
 import logoutHandler from './api/auth/logout.js'
 import sessionHandler from './api/auth/session.js'
@@ -44,9 +41,6 @@ export default defineConfig(({ mode }) => {
         name: 'api-dev-server',
         configureServer(server) {
           mountApi(server, '/api/chat', chatHandler)
-          mountApi(server, '/api/colleagues/invite', inviteHandler)
-          mountApi(server, '/api/reports/notify', notifyHandler)
-          mountApi(server, '/api/reports/send-to-resident', sendToResidentHandler)
           mountApi(server, '/api/auth/login', loginHandler)
           mountApi(server, '/api/auth/logout', logoutHandler)
           mountApi(server, '/api/auth/session', sessionHandler)

@@ -17,5 +17,7 @@ app.post('/api/auth/logout', logoutHandler);
 app.get('/api/auth/session', sessionHandler);
 app.get('/api/kutatasok', kutatasokHandler);
 app.post('/api/kutatasok', kutatasokHandler);
+app.patch('/api/kutatasok', kutatasokHandler);
+app.delete('/api/kutatasok', kutatasokHandler);
 
 app.listen(3000, () => console.log('Szerver fut: http://localhost:3000'));

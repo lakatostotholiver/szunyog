@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { login } from '../lib/diktalasAuth';
+import { login } from '../lib/adminAuth';
 
-export default function DiktalasLoginPage() {
+export default function AdminLoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [password, setPassword] = useState('');
@@ -15,7 +15,7 @@ export default function DiktalasLoginPage() {
     setSubmitting(true);
     try {
       await login(password);
-      navigate(location.state?.from ?? '/diktalas', { replace: true });
+      navigate(location.state?.from ?? '/admin', { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -27,8 +27,8 @@ export default function DiktalasLoginPage() {
     <div className="page-header">
       <div className="page-header-inner enter">
         <div className="kicker">Kollégáknak</div>
-        <h1>Bejelentkezés</h1>
-        <p>A terepi mérési adatok felviteléhez add meg a közös jelszót.</p>
+        <h1>Admin bejelentkezés</h1>
+        <p>Az admin felülethez add meg a közös jelszót.</p>
       </div>
 
       <div className="container" style={{ maxWidth: 420, marginTop: '1.5rem' }}>

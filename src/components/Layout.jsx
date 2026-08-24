@@ -150,6 +150,8 @@ export default function Layout() {
           </div>
           <p className="footer-note">
             A mérési jegyzőkönyvek digitális formában elérhetők, és kérésre megtekinthetők.
+            {' '}&middot;{' '}
+            <Link to="/admin-belepes">Kollégáknak – admin belépés</Link>
           </p>
         </div>
       </footer>

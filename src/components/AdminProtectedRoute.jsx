@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { checkSession } from '../lib/diktalasAuth';
+import { checkSession } from '../lib/adminAuth';
 
-export default function DiktalasProtectedRoute({ children }) {
+export default function AdminProtectedRoute({ children }) {
   const [status, setStatus] = useState('loading');
   const location = useLocation();
 
@@ -25,7 +25,7 @@ export default function DiktalasProtectedRoute({ children }) {
   }
 
   if (status === 'anon') {
-    return <Navigate to="/diktalas-belepes" state={{ from: location.pathname }} replace />;
+    return <Navigate to="/admin-belepes" state={{ from: location.pathname }} replace />;
   }
 
   return children;

@@ -34,6 +34,28 @@ export const monitoringSites = [
 
 export const measurements = [
   {
+    surveyDate: '2026-08-18',
+    reportDate: '2026-08-19',
+    publishDate: '2026-08-24',
+    results: [
+      { siteCode: 'Tb-01a', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01c', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-01d', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01e', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-01f', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-02a-b', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-02-c', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-03', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-04', larvae: 0, stages: [], status: 'dry' },
+      { siteCode: 'Tb-05', larvae: 0, stages: [], status: 'clean' },
+      { siteCode: 'Tb-06', larvae: 0, stages: [], status: 'clean' },
+    ],
+    summary:
+      'Az augusztus 18-i monitoring eredmények alapján csípőszúnyog-lárva fertőzöttséget sehol nem detektáltunk. Számottevő csapadék nem hullott.',
+  },
+  {
     surveyDate: '2026-07-26',
     reportDate: '2026-07-27',
     publishDate: '2026-07-27',
@@ -261,10 +283,10 @@ export const statusLabels = {
 
 export const kpis = {
   totalSites: 13,
-  latestSurvey: '2026-07-26',
+  latestSurvey: '2026-08-18',
   latestTreatedSites: 0,
-  latestCleanSites: 7,
-  latestDrySites: 6,
+  latestCleanSites: 6,
+  latestDrySites: 7,
   totalTreatmentsSeason: 9,
   seasonStart: '2026-03-01',
 };

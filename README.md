@@ -79,105 +79,31 @@ services:
 | Változó | Leírás | Honnan? |
 |---|---|---|
 | `GROQ_API_KEY` | AI chatbot API kulcs | [console.groq.com](https://console.groq.com) (ingyenes) |
-| `VITE_FIREBASE_API_KEY` | Firebase web app kulcs | [console.firebase.google.com](https://console.firebase.google.com) → Project settings → Your apps |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | ua. |
-| `VITE_FIREBASE_PROJECT_ID` | Firebase projekt azonosító | ua. |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase Storage bucket | ua. |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase sender ID | ua. |
-| `VITE_FIREBASE_APP_ID` | Firebase app ID | ua. |
+| `DIKTALAS_PASSWORD` | Az admin felület közös jelszava (lásd lentebb) | te választod |
+| `DIKTALAS_DATA_DIR` | (opcionális) hova mentse a gócpont-kutatás bejegyzéseket | te választod |
 
 ---
 
-## Kollégáknak – terepi gócpont-riportok
+## Kollégáknak – Admin felület
 
-A `Firebase` (Auth + Firestore + Storage) segítségével a meghívott kollégák be tudnak jelentkezni, és terepen felvihetnek egy riportot (helyszín a térképen + fotó + leírás). A riportok azonnal megjelennek egy publikus, **iframe-be ágyazható** nézetben is – így az éles oldalba be lehet illeszteni anélkül, hogy újra kellene deployolni a GitHubról.
+Nincs Firebase, nincs személyenkénti fiók – **egyetlen közös jelszóval** (`DIKTALAS_PASSWORD`) lehet belépni egy saját, kis szerveroldali munkamenet-kezelővel (HMAC-aláírt cookie, `api/_lib/session.js`). A jelszót ismerő bárki hozzáfér az admin felülethez.
 
-### Egyszeri Firebase beállítás
+- Bejelentkezés: `/admin-belepes` (a nyilvános oldal lábléce is linkel rá: "Kollégáknak – admin belépés")
+- Admin felület: `/admin` – innen érhetők el az egyes szerkeszthető szekciók
+- **Gócpont-kutatások** (`/admin/gocpont-kutatasok`): terepi mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). Azonnal megjelenik a **Mérések** oldalon ("Gócpont-kutatások" szekció, percenként frissül).
 
-1. Hozz létre egy projektet: [console.firebase.google.com](https://console.firebase.google.com)
-2. **Authentication** → Sign-in method → engedélyezd az **Email/Password**-öt.
-3. **Firestore Database** létrehozása (production mode).
-4. **Storage** engedélyezése (a fotókhoz).
-5. Project settings → Your apps → regisztrálj egy Web appot, majd a kapott config értékeket másold a `.env`-be (`VITE_FIREBASE_*` változók).
-6. Állítsd be a security rule-okat:
-
-   **Firestore rules:**
-   ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /reports/{reportId} {
-         allow read: if true;
-         allow create: if request.auth != null
-           && request.resource.data.reporterUid == request.auth.uid
-           && request.resource.data.description is string
-           && request.resource.data.description.size() < 2000
-           && request.resource.data.lat is number
-           && request.resource.data.lng is number;
-         allow update, delete: if false;
-       }
-     }
-   }
-   ```
-
-   **Storage rules:**
-   ```
-   rules_version = '2';
-   service firebase.storage {
-     match /b/{bucket}/o {
-       match /reports/{uid}/{fileName} {
-         allow read: if true;
-         allow write: if request.auth != null && request.auth.uid == uid
-           && request.resource.size < 8 * 1024 * 1024
-           && request.resource.contentType.matches('image/.*');
-       }
-     }
-   }
-   ```
-
-### Kolléga hozzáadása
-
-Nincs nyilvános regisztráció – zárt, meghívásos rendszer. Egy kolléga felvétele: Firebase konzol → **Authentication → Users → Add user**, add meg az e-mail címét és egy jelszót, majd oszd meg vele. Ezután be tud lépni a `/bejelentkezes` oldalon.
-
-### Használat
-
-- `/bejelentkezes` – bejelentkezés a Firebase-ben felvett fiókkal
-- `/riportok` – a kolléga saját nézete: eddigi riportok listája, "+ Új riport" gomb
-- `/riportok/uj` – új riport felvétele (helyszín a térképen vagy GPS-szel, fotó, leírás)
-- `/embed/gocpontok` – **publikus**, bejelentkezés nélkül elérhető, iframe-re optimalizált nézet (nincs navigáció/lábléc)
-
-### Beágyazás az éles oldalon
-
-Amint hozzáférsz az éles oldal HTML-jéhez, illeszd be:
-
-```html
-<iframe
-  src="https://<teszt-szerver-domain>.vercel.app/embed/gocpontok"
-  style="width:100%;min-height:640px;border:0"
-  title="Szúnyoggócpont riportok"
-></iframe>
-```
-
-Ezzel az éles oldal mindig a legfrissebb riportokat mutatja, anélkül hogy újra kellene deployolni.
-
----
-
-## Kollégáknak – mérési adatok diktálása (`/diktalas`)
-
-Ez **külön, Firebase nélküli** rendszer – egyetlen közös jelszóval (nem személyenkénti fiókkal) a biológus kollégák a `/diktalas` oldalon rögzíthetik a terepi gócpont-kutatásokat (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). A bejegyzés a saját kis szerveroldali API-tokon (`api/kutatasok.js`) és egy JSON fájlon keresztül azonnal elérhető, a **Mérések** oldal percenként újralekéri.
-
-- Bejelentkezés: `/diktalas-belepes` a közös jelszóval
-- Rögzítés: `/diktalas`
-- Megjelenítés: `/monitoring` (Mérések oldal, "Gócpont-kutatások" szekció)
+A bejegyzések egy szerveroldali JSON fájlban élnek (`api/_lib/kutatasokStore.js`), nem adatbázisban.
 
 ### Egyszeri szerverbeállítás
 
-1. A szerveren (ahol a `node server.js` fut) állítsd be a `.env`-ben:
+1. A szerveren (Vercel esetén a projekt Environment Variables résznél, self-hostnál a `.env`-ben) állítsd be:
    - `DIKTALAS_PASSWORD` – a közös jelszó, amit a kollégák a bejelentkezéshez használnak
-   - `DIKTALAS_DATA_DIR` – (opcionális) hova mentse a rögzített bejegyzéseket tartalmazó JSON fájlt. Ha üresen hagyod, a projekt mappáján **kívül**, egy szülőmappában (`../szunyog-diktalas-data`) tárolja – ez azért fontos, mert így egy friss GitHub-klónozásos frissítés sem törli el a korábban rögzített adatokat. Ha az informatikus más módon deployol (pl. mindig teljesen új mappába telepít), adj meg egy **állandó, a projekt mappájától független** elérési utat (pl. `/var/data/szunyog-diktalas` vagy `C:\szunyog-diktalas-data`).
-2. `npm run build` + a szerver (újra)indítása – ezután a `/diktalas-belepes`, `/diktalas` és az élő tábla működik.
+   - `DIKTALAS_DATA_DIR` – (opcionális) hova mentse a rögzített bejegyzéseket tartalmazó JSON fájlt. Ha üresen hagyod, a projekt mappáján **kívül**, egy szülőmappában (`../szunyog-diktalas-data`) tárolja – ez azért fontos, mert így egy friss GitHub-klónozásos frissítés sem törli el a korábban rögzített adatokat. Ha az informatikus más módon deployol (pl. mindig teljesen új mappába telepít, vagy Vercelt használ, ahol a fájlrendszer amúgy sem tartós), adj meg egy **állandó, a projekt mappájától független** elérési utat.
+2. Vercelen a környezeti változó hozzáadása után **újra kell deployolni**; self-hostnál `npm run build` + a szerver (újra)indítása.
 
-Fontos: ez a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bármikor megváltoztatható a `.env`-ben és a szerver újraindításával – **nem kell hozzá újra buildelni** a kódot, ellentétben a Firebase-es beállításokkal.
+Fontos: ez a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bármikor megváltoztatható és a szerver újraindításával azonnal érvényes – nem kell hozzá újra buildelni a kódot.
+
+> **Megjegyzés Vercelen futtatva:** a Vercel serverless függvényei nem tartós fájlrendszert használnak – minden deploy/újraindítás után elveszhet a `DIKTALAS_DATA_DIR`-ba mentett JSON fájl, ha nincs külön, tartós tárhelyre (pl. Vercel Blob, külső adatbázis) mutatva. Self-hosted (saját szerver/VPS) környezetben ez nem probléma.
 
 ---
 
@@ -186,31 +112,27 @@ Fontos: ez a jelszó **szerveroldalon** él (nincs `VITE_` előtag), tehát bár
 ```
 api/
   chat.js          – BékaBot AI backend (Vercel serverless function / server.js route)
-  kutatasok.js     – Gócpont-kutatás lista (GET) + rögzítés (POST), JSON fájl tárolással
+  kutatasok.js     – Gócpont-kutatás lista (GET), rögzítés (POST), szerkesztés (PATCH), törlés (DELETE)
   auth/
-    login.js, logout.js, session.js – /diktalas közös jelszavas belépés (cookie session)
+    login.js, logout.js, session.js – admin közös jelszavas belépés (cookie session)
   _lib/
-    session.js          – Session cookie aláírás/ellenőrzés (HMAC, Firebase nélkül)
+    session.js          – Session cookie aláírás/ellenőrzés (HMAC)
     kutatasokStore.js    – JSON fájl alapú adattárolás a gócpont-kutatásokhoz
 src/
   components/
     BekaBot.jsx    – AI chatbot UI
-    Layout.jsx     – Navigáció + footer
+    Layout.jsx     – Navigáció + footer (admin belépés link a lábléc alján)
     MonitoringTable.jsx
     FaqAccordion.jsx
-    LocationPicker.jsx  – Térképes helyszínválasztó (Leaflet/OSM)
-    ReportCard.jsx      – Riport kártya (fotó, leírás, dátum)
-    GocpontKutatasTable.jsx – Percenként frissülő gócpont-kutatás táblázat
-    ProtectedRoute.jsx  – Firebase bejelentkezést igénylő route wrapper (/riportok)
-    DiktalasProtectedRoute.jsx – Jelszavas belépést igénylő route wrapper (/diktalas)
-  context/
-    AuthContext.jsx     – Firebase Auth állapot (/riportok)
+    GocpontKutatasTable.jsx – Percenként frissülő, publikus gócpont-kutatás táblázat (Mérések oldal)
+    AdminProtectedRoute.jsx – Jelszavas belépést igénylő route wrapper (/admin, /admin/*)
   lib/
-    firebase.js         – Firebase inicializálás (Auth, Firestore, Storage) – csak /riportok-hoz
-    image.js             – Kliensoldali kép tömörítés feltöltés előtt
-    diktalasAuth.js       – /diktalas belépés/kilépés/session-ellenőrzés (saját API)
-    gocpontKutatas.js    – Gócpont-kutatás bejegyzések mentése/olvasása (saját API, nem Firestore)
-  pages/           – Oldalsablonok (+ LoginPage, ReportsListPage, ReportsNewPage, EmbedReportsPage, DiktalasPage, DiktalasLoginPage)
+    adminAuth.js         – Admin belépés/kilépés/session-ellenőrzés (saját API)
+    gocpontKutatas.js    – Gócpont-kutatás bejegyzések mentése/szerkesztése/törlése/olvasása (saját API)
+  pages/
+    AdminLoginPage.jsx     – /admin-belepes
+    AdminPage.jsx           – /admin (admin felület kezdőlap, szekciók)
+    AdminKutatasokPage.jsx  – /admin/gocpont-kutatasok (rögzítés + szerkesztés + törlés)
   data/
     monitoringData.js – Mérési adatok
 ```

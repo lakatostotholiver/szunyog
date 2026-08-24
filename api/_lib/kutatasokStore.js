@@ -42,3 +42,23 @@ export function appendKutatas(entry) {
   writeFileSync(file, JSON.stringify(entries, null, 2), 'utf8');
   return entry;
 }
+
+export function updateKutatas(id, patch) {
+  const file = ensureStore();
+  const entries = readKutatasok();
+  const idx = entries.findIndex((e) => e.id === id);
+  if (idx === -1) return null;
+  entries[idx] = { ...entries[idx], ...patch, id, updatedAt: new Date().toISOString() };
+  writeFileSync(file, JSON.stringify(entries, null, 2), 'utf8');
+  return entries[idx];
+}
+
+export function deleteKutatas(id) {
+  const file = ensureStore();
+  const entries = readKutatasok();
+  const idx = entries.findIndex((e) => e.id === id);
+  if (idx === -1) return false;
+  entries.splice(idx, 1);
+  writeFileSync(file, JSON.stringify(entries, null, 2), 'utf8');
+  return true;
+}
