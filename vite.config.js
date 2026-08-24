@@ -6,6 +6,9 @@ import logoutHandler from './api/auth/logout.js'
 import sessionHandler from './api/auth/session.js'
 import kutatasokHandler from './api/kutatasok.js'
 import meresekHandler from './api/meresek.js'
+import fajazonositasHandler from './api/fajazonositas.js'
+import cikkekHandler from './api/cikkek.js'
+import egyeniGocpontokHandler from './api/egyeni-gocpontok.js'
 import uploadHandler from './api/upload.js'
 
 // A Vite dev middleware nyers Node res objektumot ad, amin nincs Express-szerű
@@ -56,6 +59,9 @@ export default defineConfig(({ mode }) => {
           mountApi(server, '/api/auth/session', sessionHandler)
           mountApi(server, '/api/kutatasok', kutatasokHandler)
           mountApi(server, '/api/meresek', meresekHandler)
+          mountApi(server, '/api/fajazonositas', fajazonositasHandler)
+          mountApi(server, '/api/cikkek', cikkekHandler)
+          mountApi(server, '/api/egyeni-gocpontok', egyeniGocpontokHandler)
           mountRawApi(server, '/api/upload', uploadHandler)
         },
       },

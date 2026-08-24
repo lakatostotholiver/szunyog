@@ -7,6 +7,9 @@ import logoutHandler from './api/auth/logout.js';
 import sessionHandler from './api/auth/session.js';
 import kutatasokHandler from './api/kutatasok.js';
 import meresekHandler from './api/meresek.js';
+import fajazonositasHandler from './api/fajazonositas.js';
+import cikkekHandler from './api/cikkek.js';
+import egyeniGocpontokHandler from './api/egyeni-gocpontok.js';
 import uploadHandler from './api/upload.js';
 import { uploadsDir } from './api/_lib/storage.js';
 
@@ -31,6 +34,18 @@ app.get('/api/meresek', meresekHandler);
 app.post('/api/meresek', meresekHandler);
 app.patch('/api/meresek', meresekHandler);
 app.delete('/api/meresek', meresekHandler);
+
+// A CRUD végpontok mind a négy metódust ugyanazon a handleren kezelik.
+for (const [path, handler] of [
+  ['/api/fajazonositas', fajazonositasHandler],
+  ['/api/cikkek', cikkekHandler],
+  ['/api/egyeni-gocpontok', egyeniGocpontokHandler],
+]) {
+  app.get(path, handler);
+  app.post(path, handler);
+  app.patch(path, handler);
+  app.delete(path, handler);
+}
 
 app.post('/api/upload', uploadHandler);
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../lib/adminAuth';
-import { ADMIN_ROUTES } from '../lib/adminRoutes';
+import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { fetchKutatasok, addKutatas, updateKutatas, deleteKutatas } from '../lib/gocpontKutatas';
 
 const emptyForm = {
@@ -45,7 +43,6 @@ function formatDate(dateStr) {
 }
 
 export default function AdminKutatasokPage() {
-  const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState('');
@@ -142,26 +139,16 @@ export default function AdminKutatasokPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate(ADMIN_ROUTES.login, { replace: true });
-  };
 
   return (
-    <div className="page-header">
-      <div className="page-header-inner enter">
-        <div className="kicker">Kollégáknak</div>
-        <h1>Gócpont-kutatások kezelése</h1>
-      </div>
+    <AdminShell
+      title="Gócpont-kutatások"
+      intro="Terepi csípésszámlálásos mérések. A Mérések oldal „Gócpont-kutatások” szekciójában jelennek meg."
+    >
 
-      <div className="container" style={{ maxWidth: 960, marginTop: '1.5rem' }}>
-        <div className="form-actions" style={{ marginBottom: '1.5rem', justifyContent: 'space-between' }}>
-          <Link to={ADMIN_ROUTES.base} className="btn btn-outline">&larr; Admin felület</Link>
-          <button type="button" className="btn btn-outline" onClick={handleLogout}>Kijelentkezés</button>
-        </div>
-
-        <form className="auth-form card" onSubmit={handleSubmit} style={{ maxWidth: 720 }}>
-          <h2 style={{ marginTop: 0 }}>{editingId ? 'Bejegyzés szerkesztése' : 'Új bejegyzés rögzítése'}</h2>
+        <section className="admin-panel">
+        <form className="admin-form" onSubmit={handleSubmit}>
+          <h2>{editingId ? 'Bejegyzés szerkesztése' : 'Új bejegyzés rögzítése'}</h2>
 
           <div className="form-row">
             <div className="form-field">
@@ -232,11 +219,9 @@ export default function AdminKutatasokPage() {
             <textarea id="notes" rows={3} value={form.notes} onChange={update('notes')} />
           </div>
 
-          {error && <p className="form-error">{error}</p>}
+          <AdminNotice tone="error">{error}</AdminNotice>
           {success && (
-            <div className="callout callout-info">
-              <p>A bejegyzés elmentve, azonnal megjelenik a Mérések oldalon.</p>
-            </div>
+            <AdminNotice tone="info">A bejegyzés elmentve, azonnal megjelenik a Mérések oldalon.</AdminNotice>
           )}
 
           <div className="form-actions">
@@ -250,9 +235,10 @@ export default function AdminKutatasokPage() {
             </button>
           </div>
         </form>
+        </section>
 
-        <h2 style={{ marginTop: '2.5rem' }}>Eddigi bejegyzések ({entries.length})</h2>
-        {listError && <p className="form-error">{listError}</p>}
+        <h2 className="admin-list-heading">Eddigi bejegyzések ({entries.length})</h2>
+        <AdminNotice tone="error">{listError}</AdminNotice>
         {loading ? (
           <p>Betöltés…</p>
         ) : entries.length === 0 ? (
@@ -283,7 +269,7 @@ export default function AdminKutatasokPage() {
                         </button>
                         <button
                           type="button"
-                          className="btn btn-outline"
+                          className="btn btn-danger"
                           onClick={() => handleDelete(entry)}
                           disabled={deletingId === entry.id}
                         >
@@ -297,7 +283,6 @@ export default function AdminKutatasokPage() {
             </table>
           </div>
         )}
-      </div>
-    </div>
+    </AdminShell>
   );
 }

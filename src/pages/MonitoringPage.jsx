@@ -11,24 +11,30 @@ import GocpontKutatasTable from '../components/GocpontKutatasTable';
 import { SwipeIcon } from '../components/Icons';
 import { SeasonStatusChart, SeasonLarvaeChart } from '../components/SeasonChart';
 import { fetchKutatasok } from '../lib/gocpontKutatas';
+import { fajazonositas } from '../lib/cms';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-const adultSpeciesRows = adultSpeciesMonitoring.records.flatMap((r) =>
-  r.species.map((sp, i) => ({
-    key: `${r.date}-${r.location}-${sp.name}`,
-    date: r.date,
-    method: r.method,
-    location: r.location,
-    isFirst: i === 0,
-    rowSpan: r.species.length,
-    speciesName: sp.name,
-    count: sp.count,
-  }))
-);
+// A kódban rögzített és az admin felületen felvitt befogások együtt, dátum szerint.
+function buildSpeciesRows(records) {
+  return [...records]
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .flatMap((r) =>
+      r.species.map((sp, i) => ({
+        key: `${r.date}-${r.location}-${sp.name}-${i}`,
+        date: r.date,
+        method: r.method,
+        location: r.location,
+        isFirst: i === 0,
+        rowSpan: r.species.length,
+        speciesName: sp.name,
+        count: sp.count,
+      }))
+    );
+}
 
 export default function MonitoringPage() {
   const measurements = useAllMeasurements();
@@ -39,6 +45,7 @@ export default function MonitoringPage() {
     0
   );
   const [kutatasok, setKutatasok] = useState([]);
+  const [speciesRecords, setSpeciesRecords] = useState(adultSpeciesMonitoring.records);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,6 +56,16 @@ export default function MonitoringPage() {
     };
     load();
     const interval = setInterval(load, 60000);
+
+    // Az admin felületen felvitt befogások a kódban lévők mellé kerülnek.
+    fajazonositas
+      .list()
+      .then((entries) => {
+        if (cancelled || entries.length === 0) return;
+        setSpeciesRecords([...adultSpeciesMonitoring.records, ...entries]);
+      })
+      .catch(() => {});
+
     return () => {
       cancelled = true;
       clearInterval(interval);
@@ -141,7 +158,7 @@ export default function MonitoringPage() {
                 </tr>
               </thead>
               <tbody>
-                {adultSpeciesRows.map((row) => (
+                {buildSpeciesRows(speciesRecords).map((row) => (
                   <tr key={row.key}>
                     {row.isFirst && (
                       <>

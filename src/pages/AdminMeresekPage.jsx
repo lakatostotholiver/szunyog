@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../lib/adminAuth';
-import { ADMIN_ROUTES } from '../lib/adminRoutes';
+import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { fetchMeresek, addMeres, updateMeres, deleteMeres, uploadFile } from '../lib/meresek';
 import { monitoringSites, statusLabels } from '../data/monitoringData';
 
@@ -50,7 +48,6 @@ function formatDate(dateStr) {
 }
 
 export default function AdminMeresekPage() {
-  const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState('');
@@ -173,30 +170,16 @@ export default function AdminMeresekPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate(ADMIN_ROUTES.login, { replace: true });
-  };
 
   return (
-    <div className="page-header">
-      <div className="page-header-inner enter">
-        <div className="kicker">Kollégáknak</div>
-        <h1>Mérési körök kezelése</h1>
-        <p>
-          Itt vihetsz fel egy új bejárást a NO MOSQUITO jelentés alapján. Ami itt elmentesz, az
-          azonnal megjelenik a Főoldalon és a Mérések oldalon – nem kell hozzá fejlesztő.
-        </p>
-      </div>
+    <AdminShell
+      title="Mérési körök"
+      intro="A NO MOSQUITO bejárások adatai. Ami itt elmentesz, azonnal megjelenik a Főoldalon és a Mérések oldalon."
+    >
 
-      <div className="container" style={{ maxWidth: 960, marginTop: '1.5rem' }}>
-        <div className="form-actions" style={{ marginBottom: '1.5rem', justifyContent: 'space-between' }}>
-          <Link to={ADMIN_ROUTES.base} className="btn btn-outline">&larr; Admin felület</Link>
-          <button type="button" className="btn btn-outline" onClick={handleLogout}>Kijelentkezés</button>
-        </div>
-
-        <form className="auth-form card" onSubmit={handleSubmit}>
-          <h2 style={{ marginTop: 0 }}>{editingId ? 'Mérési kör szerkesztése' : 'Új mérési kör'}</h2>
+        <section className="admin-panel">
+        <form className="admin-form" onSubmit={handleSubmit}>
+          <h2>{editingId ? 'Mérési kör szerkesztése' : 'Új mérési kör'}</h2>
 
           <div className="form-row">
             <div className="form-field">
@@ -308,12 +291,8 @@ export default function AdminMeresekPage() {
             </table>
           </div>
 
-          {error && <p className="form-error">{error}</p>}
-          {success && (
-            <div className="callout callout-info">
-              <p>{success}</p>
-            </div>
-          )}
+          <AdminNotice tone="error">{error}</AdminNotice>
+          <AdminNotice tone="info">{success}</AdminNotice>
 
           <div className="form-actions">
             {editingId && (
@@ -326,13 +305,14 @@ export default function AdminMeresekPage() {
             </button>
           </div>
         </form>
+        </section>
 
-        <h2 style={{ marginTop: '2.5rem' }}>Felvitt mérési körök ({entries.length})</h2>
+        <h2 className="admin-list-heading">Felvitt mérési körök ({entries.length})</h2>
         <p className="admin-hint">
           A 2026-os szezon korábbi, kódban rögzített bejárásai külön jelennek meg az oldalon – itt
           csak az admin felületen felvitt körök szerkeszthetők.
         </p>
-        {listError && <p className="form-error">{listError}</p>}
+        <AdminNotice tone="error">{listError}</AdminNotice>
         {loading ? (
           <p>Betöltés…</p>
         ) : entries.length === 0 ? (
@@ -371,7 +351,7 @@ export default function AdminMeresekPage() {
                         </button>
                         <button
                           type="button"
-                          className="btn btn-outline"
+                          className="btn btn-danger"
                           onClick={() => handleDelete(entry)}
                           disabled={deletingId === entry.id}
                         >
@@ -385,7 +365,6 @@ export default function AdminMeresekPage() {
             </table>
           </div>
         )}
-      </div>
-    </div>
+    </AdminShell>
   );
 }

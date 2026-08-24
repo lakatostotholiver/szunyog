@@ -13,8 +13,10 @@ const MosquitoIcon = () => (
 );
 
 const navItems = [
-  { to: '/', label: 'Hírek', end: true },
+  { to: '/', label: 'Kezdőlap', end: true },
   { to: '/monitoring', label: 'Mérések' },
+  { to: '/hirek', label: 'Hírek' },
+  { to: '/gocpont-peldak', label: 'Gócpont-példák' },
   { to: '/mit-tehetunk', label: 'Mit tehetünk?' },
   { to: '/gyik', label: 'GYIK' },
 ];

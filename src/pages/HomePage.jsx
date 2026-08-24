@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { kpis, periodicReport, adultSpeciesMonitoring } from '../data/monitoringData';
 import { useAllMeasurements } from '../lib/useAllMeasurements';
+import { cikkek } from '../lib/cms';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -15,7 +17,7 @@ function formatShortDate(dateStr) {
 // A hírfolyam minden eleme (mérési körök + jelentések + tájékoztatók) egyetlen,
 // dátum szerint csökkenő sorrendbe rendezett listába kerül, hogy mindig a
 // legfrissebb esemény legyen elöl.
-function buildNewsEvents(measurements) {
+function buildNewsEvents(measurements, articles) {
   const events = measurements.map((m, index) => {
     const treated = m.results.filter((r) => r.status === 'treated').length;
     const clean = m.results.filter((r) => r.status === 'clean').length;
@@ -98,11 +100,26 @@ function buildNewsEvents(measurements) {
     }
   );
 
+  // Az admin felületen írt cikkek ugyanebbe a folyamba kerülnek, dátum szerint.
+  articles.forEach((article) => {
+    events.push({
+      key: `cikk-${article.id}`,
+      date: article.publishDate,
+      displayDate: formatDate(article.publishDate),
+      tag: article.tag,
+      title: article.title,
+      body: article.lead || `${article.body.slice(0, 180)}…`,
+      linkTo: `/hirek/${article.slug}`,
+      linkLabel: 'Tovább olvasom',
+    });
+  });
+
   return events.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export default function HomePage() {
   const measurements = useAllMeasurements();
+  const [articles, setArticles] = useState([]);
   const latest = measurements[0];
   const cleanCount = latest.results.filter((r) => r.status === 'clean').length;
   const treatmentsSeason = measurements.reduce(
@@ -110,7 +127,20 @@ export default function HomePage() {
     0
   );
 
-  const newsEvents = buildNewsEvents(measurements);
+  useEffect(() => {
+    let cancelled = false;
+    cikkek
+      .list()
+      .then((list) => {
+        if (!cancelled) setArticles(list);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const newsEvents = buildNewsEvents(measurements, articles);
 
   return (
     <>

@@ -481,43 +481,270 @@ section {
 
 /* ── Admin ── */
 
+.admin {
+  --admin-gap: 1.25rem;
+  min-height: 100vh;
+  background: var(--bg-alt);
+}
+
+/* Fejléc */
+.admin-bar {
+  background: var(--brand-dark);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.admin-bar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.7rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #fff;
+  text-decoration: none;
+}
+.admin-brand:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.admin-brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.14);
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.admin-brand strong {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+.admin-brand em {
+  display: block;
+  font-style: normal;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-bar-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Navigáció */
+.admin-nav {
+  background: var(--brand);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.admin-nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  gap: 0.15rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.admin-nav-inner::-webkit-scrollbar {
+  display: none;
+}
+.admin-nav-link {
+  flex-shrink: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.admin-nav-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.admin-nav-link.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/* Tartalom */
+.admin-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.75rem 1.25rem 4rem;
+}
+
+.admin-head {
+  margin-bottom: 1.5rem;
+}
+.admin-head h1 {
+  font-size: 1.45rem;
+  margin: 0;
+}
+.admin-head p {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 70ch;
+}
+
+.admin-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: var(--admin-gap);
+}
+
+.admin-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.admin-panel-head h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+.admin-panel-head p {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 70ch;
+}
+
+/* Kezdőlap csempék */
 .admin-section-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
 }
 .admin-section-card {
   display: block;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand-mid);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.25rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 .admin-section-card:hover {
-  border-color: var(--brand);
+  border-left-color: var(--brand);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
 }
 .admin-section-card h2 {
-  font-size: 1.05rem;
-  margin: 0 0 0.4rem;
+  font-size: 0.98rem;
+  margin: 0 0 0.35rem;
 }
 .admin-section-card p {
-  font-size: 0.9rem;
-  color: var(--muted);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   margin: 0;
+  line-height: 1.6;
 }
+
+/* Űrlap */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+.admin-fieldset {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+.admin-fieldset > legend {
+  padding: 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--brand-mid);
+}
+.admin-fieldset-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: -0.6rem 0 0;
+}
+
+.admin-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.admin-check input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+.admin-check span small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Ismétlődő sorok (fajok, fotók) */
+.admin-repeat-row {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.admin-repeat-row > * {
+  min-width: 0;
+}
+.admin-repeat-grow {
+  flex: 1 1 200px;
+}
+.admin-repeat-narrow {
+  flex: 0 0 120px;
+}
+
+/* Táblázat műveletek */
 .admin-table-actions {
   display: flex;
   gap: 0.4rem;
   white-space: nowrap;
+  justify-content: flex-end;
 }
-.admin-table-actions button {
+.admin-table-actions .btn {
+  padding: 0.32rem 0.7rem;
   font-size: 0.78rem;
-  padding: 0.3rem 0.6rem;
 }
-tr.admin-row-editing {
-  outline: 2px solid var(--brand);
-  outline-offset: -2px;
+tr.admin-row-editing > td {
+  background: var(--brand-lighter);
 }
+
 .admin-results-table td {
   vertical-align: top;
 }
@@ -540,6 +767,26 @@ tr.admin-row-editing {
   font-size: 0.8rem;
   white-space: nowrap;
 }
+
+/* Visszajelzések */
+.admin-notice {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+}
+.admin-notice-info {
+  background: var(--brand-lighter);
+  border-color: var(--brand-light);
+  color: var(--brand);
+}
+.admin-notice-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
 .admin-upload-status {
   font-size: 0.8rem;
   color: var(--muted);
@@ -549,15 +796,76 @@ tr.admin-row-editing {
   font-size: 0.85rem;
   color: var(--muted);
 }
-.btn-link-danger {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: #991b1b;
-  text-decoration: underline;
-  cursor: pointer;
+.admin-empty {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
 }
+
+/* Fotó rács az űrlapon */
+.admin-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.85rem;
+}
+.admin-photo-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+.admin-photo-item img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+.admin-photo-item-body {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.admin-photo-item input {
+  width: 100%;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+}
+
+/* Címke a nyilvános/rejtett állapothoz */
+.admin-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.12rem 0.5rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.admin-flag-public {
+  background: #dcfce7;
+  color: #166534;
+}
+.admin-flag-private {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+@media (max-width: 640px) {
+  .admin-main {
+    padding: 1.25rem 1rem 3rem;
+  }
+  .admin-panel {
+    padding: 1.15rem 1rem;
+  }
+  .admin-table-actions {
+    justify-content: flex-start;
+  }
+}
+
 
 /* ── Badge ── */
 
@@ -769,6 +1077,43 @@ tr.admin-row-editing {
 .btn-outline-white:hover {
   border-color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Visszafordíthatatlan művelet (törlés) – sosem nézhet ki ugyanúgy, mint egy
+   ártalmatlan gomb. Alapból visszafogott, hoverre egyértelműen piros. */
+.btn-danger {
+  background: transparent;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.btn-danger:hover {
+  background: #991b1b;
+  border-color: #991b1b;
+  color: #fff;
+}
+
+/* Sötét fejlécen ülő, alacsony hangsúlyú gomb. */
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: transparent;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Bar Chart ── */
@@ -2262,3 +2607,200 @@ tr.admin-row-editing {
   flex-wrap: wrap;
 }
 
+
+/* ── Cikkek (Hírek oldal) ── */
+
+.article-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.article-card {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg);
+  transition: box-shadow 0.2s ease;
+}
+.article-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.article-card:not(:has(.article-card-cover)) {
+  grid-template-columns: 1fr;
+}
+
+.article-card-cover img {
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  object-fit: cover;
+}
+
+.article-card-body {
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+.article-card-body h2 {
+  font-size: 1.15rem;
+  margin: 0.35rem 0 0.5rem;
+}
+.article-card-body h2 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.article-card-body h2 a:hover {
+  color: var(--brand);
+}
+.article-card-body p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.75rem;
+}
+
+.article-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
+.article-body {
+  max-width: 72ch;
+}
+.article-body p {
+  margin-bottom: 1.1rem;
+  line-height: 1.8;
+}
+.article-lead {
+  font-size: 1.05rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.article-cover {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+}
+.article-date {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .article-card {
+    grid-template-columns: 1fr;
+  }
+  .article-card-cover img {
+    max-height: 200px;
+  }
+}
+
+/* ── Gócpont-példák ── */
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.case-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.case-card-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 2px;
+  background: var(--border-light);
+}
+.case-card-photos figure {
+  margin: 0;
+  position: relative;
+}
+.case-card-photos img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+}
+.case-card-photos figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.68rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.case-card-body {
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+.case-card-body h2 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+.case-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.case-card-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: -0.35rem 0 0;
+}
+.case-card-text {
+  font-size: 0.88rem;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.case-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+.case-facts dt {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.case-facts dd {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.case-advice {
+  font-size: 0.88rem;
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  background: var(--brand-lighter);
+  border-left: 3px solid var(--brand-mid);
+  border-radius: var(--radius);
+  margin-top: auto;
+}
+
+.admin-list-heading {
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+}

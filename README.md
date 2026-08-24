@@ -110,6 +110,17 @@ Amit itt elmentesz, **azonnal megjelenik a Főoldalon és a Mérések oldalon** 
 
 **Gócpont-kutatások** (`/801997752/gocpont-kutatasok`) – terepi csípésszámlálásos mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). A **Mérések** oldal "Gócpont-kutatások" szekciójában jelenik meg.
 
+**Egyéni gócpontok** (`/801997752/egyeni-gocpontok`) – háztartásoknál végzett vizsgálatok fotókkal. Az űrlap két, vizuálisan elkülönített blokkra oszlik:
+
+- *Bizalmas – csak admin*: pontos cím, kapcsolattartó neve és telefonszáma, belső megjegyzés.
+- *Megosztható*: városrész, ingatlan- és gócponttípus, lárvamennyiség, kezelés, tanulság, fényképek.
+
+A nyilvános **Gócpont-példák** oldalra csak akkor kerül ki bármi, ha a *Megosztás mintaként* pipa be van téve, és akkor is **kizárólag a megosztható blokk** – a szűrés szerveroldalon történik (`publicView` az [api/egyeni-gocpontok.js](api/egyeni-gocpontok.js) fájlban), így a személyes adatok a böngészőbe se jutnak el.
+
+**Fajazonosítás** (`/801997752/fajazonositas`) – CO₂-csapdázás és csípésszámlálás befogási eredményei, befogásonként több fajjal; az egyedszámok automatikusan összeadódnak. A **Mérések** oldal fajazonosítási táblázatában jelenik meg.
+
+**Cikkek** (`/801997752/cikkek`) – tájékoztató cikkek címmel, bevezetővel, szöveggel és borítóképpel. A *Közzétéve* pipa nélkül piszkozat marad (a lakosság nem látja). A közzétett cikk megjelenik a **Hírek** oldalon (`/hirek`), saját cikkoldallal (`/hirek/<slug>`), és a főoldali hírfolyamban is, a dátuma szerinti helyen.
+
 ### Hírfolyam (Főoldal)
 
 A "Legfrissebb események" lista egyetlen, **dátum szerint csökkenő sorrendbe rendezett** folyam: a mérési körök, az időszakos jelentés, a fajazonosítás és a tájékoztató kártyák együtt szerepelnek benne. Új mérési kör felvitele után az automatikusan a lista élére kerül – nincs kézzel karbantartott sorrend.
