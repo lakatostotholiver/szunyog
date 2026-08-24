@@ -37,7 +37,14 @@ export async function readJson(key, fallback = []) {
       const { blobs } = await list({ prefix: key, limit: 1 });
       const match = blobs.find((b) => b.pathname === key);
       if (!match) return fallback;
-      const res = await fetch(match.url, { cache: 'no-store' });
+
+      // A Blob publikus URL-je CDN mögött van, és a `cache: 'no-store'`
+      // önmagában nem elég: közvetlenül írás után még a RÉGI tartalmat adta
+      // vissza. Emiatt egy frissen létrehozott bejegyzés törlése/szerkesztése
+      // "nem található" hibára futott, és egy gyors második mentés felül tudta
+      // írni az elsőt. Egyedi lekérdezési paraméterrel megkerüljük a gyorsítótárat.
+      const bustUrl = `${match.url}${match.url.includes('?') ? '&' : '?'}_=${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const res = await fetch(bustUrl, { cache: 'no-store' });
       if (!res.ok) return fallback;
       return await res.json();
     } catch {
