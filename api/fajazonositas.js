@@ -1,8 +1,14 @@
-import { createCollection, str, num } from './_lib/collection.js';
+import { createCollection, str } from './_lib/collection.js';
 import { createCrudHandler } from './_lib/crudHandler.js';
 
 const collection = createCollection('fajazonositas.json', { sortBy: 'date' });
 const METHODS = new Set(['CO2', 'H']);
+
+// Befogott egyedszám: nem lehet negatív és nem lehet tört szám.
+const count = (v) => {
+  const n = Math.floor(Number(v));
+  return Number.isFinite(n) && n > 0 ? n : 0;
+};
 
 export default createCrudHandler({
   collection,
@@ -15,7 +21,7 @@ export default createCrudHandler({
     const species = Array.isArray(body.species)
       ? body.species
           .filter((s) => str(s.name))
-          .map((s) => ({ name: str(s.name), count: num(s.count) ?? 0 }))
+          .map((s) => ({ name: str(s.name), count: count(s.count) }))
       : [];
 
     return {

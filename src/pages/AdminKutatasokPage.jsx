@@ -237,6 +237,7 @@ export default function AdminKutatasokPage() {
         </form>
         </section>
 
+        <section className="admin-panel">
         <h2 className="admin-list-heading">Eddigi bejegyzések ({entries.length})</h2>
         <AdminNotice tone="error">{listError}</AdminNotice>
         {loading ? (
@@ -283,6 +284,7 @@ export default function AdminKutatasokPage() {
             </table>
           </div>
         )}
+        </section>
     </AdminShell>
   );
 }

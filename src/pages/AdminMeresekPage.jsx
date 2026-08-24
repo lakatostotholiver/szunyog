@@ -312,6 +312,7 @@ export default function AdminMeresekPage() {
         </form>
         </section>
 
+        <section className="admin-panel">
         <h2 className="admin-list-heading">Felvitt mérési körök ({entries.length})</h2>
         <p className="admin-hint">
           A 2026-os szezon korábbi, kódban rögzített bejárásai külön jelennek meg az oldalon – itt
@@ -370,6 +371,7 @@ export default function AdminMeresekPage() {
             </table>
           </div>
         )}
+        </section>
     </AdminShell>
   );
 }

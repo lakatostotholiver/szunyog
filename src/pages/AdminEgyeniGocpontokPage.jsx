@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback } from 'react';
+import { lazy, Suspense, useCallback, useState } from 'react';
 import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { egyeniGocpontok, uploadFile } from '../lib/cms';
 import { useCrudPage } from '../lib/useCrudPage';
@@ -90,6 +90,8 @@ export default function AdminEgyeniGocpontokPage() {
   });
   const { form, setForm, field } = crud;
 
+  const [uploading, setUploading] = useState(null);
+
   const setLatLng = useCallback(
     ({ lat, lng }) => setForm((f) => ({ ...f, lat, lng })),
     [setForm]
@@ -99,9 +101,11 @@ export default function AdminEgyeniGocpontokPage() {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
     crud.setError('');
+    const batch = files.slice(0, 8 - form.photos.length);
     try {
       const uploaded = [];
-      for (const file of files.slice(0, 8 - form.photos.length)) {
+      for (const [i, file] of batch.entries()) {
+        setUploading({ done: i, total: batch.length });
         const { url } = await uploadFile(file);
         uploaded.push({ url, caption: '' });
       }
@@ -109,6 +113,7 @@ export default function AdminEgyeniGocpontokPage() {
     } catch (err) {
       crud.setError(err.message);
     } finally {
+      setUploading(null);
       e.target.value = '';
     }
   };
@@ -282,7 +287,12 @@ export default function AdminEgyeniGocpontokPage() {
 
             <div className="form-field">
               <label htmlFor="photos">Fényképek (max. 8)</label>
-              <input id="photos" type="file" accept="image/*" multiple onChange={handlePhotos} />
+              <input id="photos" type="file" accept="image/*" multiple onChange={handlePhotos} disabled={!!uploading} />
+              {uploading && (
+                <p className="admin-upload-status">
+                  Feltöltés: {uploading.done + 1} / {uploading.total} kép…
+                </p>
+              )}
               <p className="admin-upload-status">
                 Ügyelj rá, hogy a képeken ne legyen házszám, rendszám vagy arc.
               </p>
@@ -330,7 +340,7 @@ export default function AdminEgyeniGocpontokPage() {
                 Mégse
               </button>
             )}
-            <button type="submit" className="btn btn-brand" disabled={crud.saving}>
+            <button type="submit" className="btn btn-brand" disabled={crud.saving || !!uploading}>
               {crud.saving ? 'Mentés…' : crud.editingId ? 'Módosítás mentése' : 'Vizsgálat mentése'}
             </button>
           </div>

@@ -38,15 +38,16 @@ export function createCrudHandler({ collection, buildFields, validate, publicVie
         const problem = validate ? validate(body) : null;
         if (problem) return res.status(400).json({ error: problem });
 
-        const fields = buildFields(body);
+        // A buildFields lehet async (pl. egyedi slug ellenőrzéshez kell a lista).
+        const editingId = req.method === 'PATCH' ? idFromUrl(req) : null;
+        const fields = await buildFields(body, { id: editingId });
 
         if (req.method === 'POST') {
           return res.status(201).json({ entry: await collection.create(fields) });
         }
 
-        const id = idFromUrl(req);
-        if (!id) return res.status(400).json({ error: 'Hiányzó azonosító.' });
-        const updated = await collection.update(id, fields);
+        if (!editingId) return res.status(400).json({ error: 'Hiányzó azonosító.' });
+        const updated = await collection.update(editingId, fields);
         if (!updated) return res.status(404).json({ error: 'Nem található bejegyzés.' });
         return res.status(200).json({ entry: updated });
       }

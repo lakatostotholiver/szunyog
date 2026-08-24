@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import AdminShell, { AdminPanel, AdminNotice } from '../components/AdminShell';
 import { cikkek, uploadFile } from '../lib/cms';
 import Attachment from '../components/Attachment';
@@ -46,17 +47,20 @@ export default function AdminCikkekPage() {
     },
   });
   const { form, setForm, field } = crud;
+  const [uploading, setUploading] = useState(false);
 
   const handleCover = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     crud.setError('');
+    setUploading(true);
     try {
       const { url, name, size, type } = await uploadFile(file);
       setForm((f) => ({ ...f, coverUrl: url, coverName: name, coverSize: size, coverType: type }));
     } catch (err) {
       crud.setError(err.message);
     } finally {
+      setUploading(false);
       e.target.value = '';
     }
   };
@@ -145,7 +149,8 @@ export default function AdminCikkekPage() {
 
           <div className="form-field">
             <label htmlFor="cover">Borítókép (nem kötelező)</label>
-            <input id="cover" type="file" accept="image/*" onChange={handleCover} />
+            <input id="cover" type="file" accept="image/*" onChange={handleCover} disabled={uploading} />
+            {uploading && <p className="admin-upload-status">Kép feltöltése…</p>}
             <Attachment
               url={form.coverUrl}
               name={form.coverName}
@@ -174,7 +179,7 @@ export default function AdminCikkekPage() {
                 Mégse
               </button>
             )}
-            <button type="submit" className="btn btn-brand" disabled={crud.saving}>
+            <button type="submit" className="btn btn-brand" disabled={crud.saving || uploading}>
               {crud.saving ? 'Mentés…' : crud.editingId ? 'Módosítás mentése' : 'Cikk mentése'}
             </button>
           </div>
