@@ -89,20 +89,30 @@ services:
 
 Nincs Firebase, nincs személyenkénti fiók – **egyetlen közös jelszóval** (`DIKTALAS_PASSWORD`) lehet belépni egy saját, kis szerveroldali munkamenet-kezelővel (HMAC-aláírt cookie, `api/_lib/session.js`). A jelszót ismerő bárki hozzáfér az admin felülethez.
 
-- Bejelentkezés: `/admin-belepes` (a nyilvános oldal lábléce is linkel rá: "Kollégáknak – admin belépés")
-- Admin felület: `/admin` – innen érhetők el az egyes szerkeszthető szekciók
+Az admin felület **rejtett**: nincs rá link sehol a nyilvános oldalon, és az útvonala egy nehezen kitalálható számsor. (Ez nem helyettesíti a jelszót – az minden admin oldalon érvényben van –, csak megnehezíti a véletlen megtalálást.)
+
+- Bejelentkezés: **`/801997752/belepes`**
+- Admin felület: **`/801997752`** – innen érhetők el a szerkeszthető szekciók
+
+> Az útvonal cseréjéhez elég egyetlen értéket átírni: `ADMIN_BASE` a [src/lib/adminRoutes.js](src/lib/adminRoutes.js) fájlban.
 
 ### Mit lehet szerkeszteni?
 
-**Mérési körök** (`/admin/meresek`) – a NO MOSQUITO jelentések adatai, amiket eddig fejlesztőnek kellett kézzel kódba írnia:
+**Mérési körök** (`/801997752/meresek`) – a NO MOSQUITO jelentések adatai, amiket eddig fejlesztőnek kellett kézzel kódba írnia:
 - bejárás / jelentés / közzététel dátuma,
 - **helyszínenként** (mind a 13 mintavételi pont) lárvaszám, állapot (Tiszta / Kezelés / Száraz) és fejlettségi stádium (L1–L4),
 - összefoglaló szöveg,
 - **PDF jelentés vagy kép csatolása** (max. 10 MB) – ez letölthető linkként jelenik meg a Mérések oldalon.
 
-Amit itt elmentesz, **azonnal megjelenik a Főoldalon és a Mérések oldalon** (a lapok percenként frissítenek), és a KPI-számok (tiszta helyszínek, kezelések száma, bejárások száma) is automatikusan újraszámolódnak. A 2026-os szezon korábbi körei továbbra is a kódban vannak (`src/data/monitoringData.js`); a két forrás dátum szerint összefésülve jelenik meg.
+Amit itt elmentesz, **azonnal megjelenik a Főoldalon és a Mérések oldalon** (a lapok percenként frissítenek), és a KPI-számok (tiszta helyszínek, kezelések száma, bejárások száma) is automatikusan újraszámolódnak.
 
-**Gócpont-kutatások** (`/admin/gocpont-kutatasok`) – terepi csípésszámlálásos mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). A **Mérések** oldal "Gócpont-kutatások" szekciójában jelenik meg.
+**A 2026-os szezon addigi körei is szerkeszthetők**: a szerver első indulásakor a kódban rögzített méréseket (`src/data/monitoringData.js`) automatikusan betölti a CMS-be, így az ügyintéző ezeket is javíthatja vagy törölheti. A betöltés egyszer fut le – egy szándékosan törölt kör nem jön vissza magától.
+
+**Gócpont-kutatások** (`/801997752/gocpont-kutatasok`) – terepi csípésszámlálásos mérések rögzítése, **szerkesztése és törlése** (dátum, helyszín, csípésszám, befogott egyedszám, keltetőhelyek, kezelés, lárvagyűjtés, megjegyzés). A **Mérések** oldal "Gócpont-kutatások" szekciójában jelenik meg.
+
+### Hírfolyam (Főoldal)
+
+A "Legfrissebb események" lista egyetlen, **dátum szerint csökkenő sorrendbe rendezett** folyam: a mérési körök, az időszakos jelentés, a fajazonosítás és a tájékoztató kártyák együtt szerepelnek benne. Új mérési kör felvitele után az automatikusan a lista élére kerül – nincs kézzel karbantartott sorrend.
 
 ### Hol tárolódnak az adatok?
 
@@ -139,7 +149,8 @@ api/
   _lib/
     session.js          – Session cookie aláírás/ellenőrzés (HMAC)
     storage.js          – Tároló absztrakció: Vercel Blob vagy lokális JSON fájl
-    meresekStore.js     – Mérési körök adattárolása
+    meresekStore.js     – Mérési körök adattárolása (+ egyszeri seed betöltés)
+    seed.js             – A kódban rögzített mérések betöltése a CMS-be
     kutatasokStore.js   – Gócpont-kutatások adattárolása
 src/
   components/
@@ -150,17 +161,18 @@ src/
     GocpontKutatasTable.jsx – Percenként frissülő, publikus gócpont-kutatás táblázat (Mérések oldal)
     AdminProtectedRoute.jsx – Jelszavas belépést igénylő route wrapper (/admin, /admin/*)
   lib/
+    adminRoutes.js       – Az admin felület (rejtett) útvonalai – EGY helyen cserélhető
     adminAuth.js         – Admin belépés/kilépés/session-ellenőrzés (saját API)
     meresek.js           – Mérési körök CRUD + fájlfeltöltés (saját API)
     gocpontKutatas.js    – Gócpont-kutatás bejegyzések CRUD (saját API)
-    useAllMeasurements.js – Kódban lévő + admin felületen felvitt mérések összefésülése
+    useAllMeasurements.js – Mérések betöltése a CMS-ből (kódbeli adatok tartalékként)
   pages/
-    AdminLoginPage.jsx      – /admin-belepes
-    AdminPage.jsx           – /admin (admin felület kezdőlap, szekciók)
-    AdminMeresekPage.jsx    – /admin/meresek (mérési körök + PDF feltöltés)
-    AdminKutatasokPage.jsx  – /admin/gocpont-kutatasok (rögzítés + szerkesztés + törlés)
+    AdminLoginPage.jsx      – /801997752/belepes
+    AdminPage.jsx           – /801997752 (admin felület kezdőlap, szekciók)
+    AdminMeresekPage.jsx    – /801997752/meresek (mérési körök + PDF feltöltés)
+    AdminKutatasokPage.jsx  – /801997752/gocpont-kutatasok (rögzítés/szerkesztés/törlés)
   data/
-    monitoringData.js – A 2026-os szezon korábbi mérései + felmérés/jelentés adatok
+    monitoringData.js – A mérések kiinduló adatai (CMS seed) + felmérés/jelentés adatok
 ```
 
 ---

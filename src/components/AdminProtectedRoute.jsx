@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { checkSession } from '../lib/adminAuth';
+import { ADMIN_ROUTES } from '../lib/adminRoutes';
 
 export default function AdminProtectedRoute({ children }) {
   const [status, setStatus] = useState('loading');
@@ -25,7 +26,7 @@ export default function AdminProtectedRoute({ children }) {
   }
 
   if (status === 'anon') {
-    return <Navigate to="/admin-belepes" state={{ from: location.pathname }} replace />;
+    return <Navigate to={ADMIN_ROUTES.login} state={{ from: location.pathname }} replace />;
   }
 
   return children;

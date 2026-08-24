@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../lib/adminAuth';
+import { ADMIN_ROUTES } from '../lib/adminRoutes';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function AdminLoginPage() {
     setSubmitting(true);
     try {
       await login(password);
-      navigate(location.state?.from ?? '/admin', { replace: true });
+      navigate(location.state?.from ?? ADMIN_ROUTES.base, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {

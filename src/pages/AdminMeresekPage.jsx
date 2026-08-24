@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../lib/adminAuth';
+import { ADMIN_ROUTES } from '../lib/adminRoutes';
 import { fetchMeresek, addMeres, updateMeres, deleteMeres, uploadFile } from '../lib/meresek';
 import { monitoringSites, statusLabels } from '../data/monitoringData';
 
@@ -174,7 +175,7 @@ export default function AdminMeresekPage() {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/admin-belepes', { replace: true });
+    navigate(ADMIN_ROUTES.login, { replace: true });
   };
 
   return (
@@ -190,7 +191,7 @@ export default function AdminMeresekPage() {
 
       <div className="container" style={{ maxWidth: 960, marginTop: '1.5rem' }}>
         <div className="form-actions" style={{ marginBottom: '1.5rem', justifyContent: 'space-between' }}>
-          <Link to="/admin" className="btn btn-outline">&larr; Admin felület</Link>
+          <Link to={ADMIN_ROUTES.base} className="btn btn-outline">&larr; Admin felület</Link>
           <button type="button" className="btn btn-outline" onClick={handleLogout}>Kijelentkezés</button>
         </div>
 

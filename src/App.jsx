@@ -9,6 +9,10 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
 import AdminKutatasokPage from './pages/AdminKutatasokPage';
 import AdminMeresekPage from './pages/AdminMeresekPage';
+import { ADMIN_BASE } from './lib/adminRoutes';
+
+// Az admin útvonalak a Route path-hoz relatívak (nincs vezető "/").
+const adminPath = ADMIN_BASE.replace(/^\//, '');
 
 export default function App() {
   return (
@@ -19,9 +23,10 @@ export default function App() {
           <Route path="monitoring" element={<MonitoringPage />} />
           <Route path="mit-tehetunk" element={<MitTehetunkPage />} />
           <Route path="gyik" element={<GyikPage />} />
-          <Route path="admin-belepes" element={<AdminLoginPage />} />
+
+          <Route path={`${adminPath}/belepes`} element={<AdminLoginPage />} />
           <Route
-            path="admin"
+            path={adminPath}
             element={
               <AdminProtectedRoute>
                 <AdminPage />
@@ -29,7 +34,7 @@ export default function App() {
             }
           />
           <Route
-            path="admin/gocpont-kutatasok"
+            path={`${adminPath}/gocpont-kutatasok`}
             element={
               <AdminProtectedRoute>
                 <AdminKutatasokPage />
@@ -37,7 +42,7 @@ export default function App() {
             }
           />
           <Route
-            path="admin/meresek"
+            path={`${adminPath}/meresek`}
             element={
               <AdminProtectedRoute>
                 <AdminMeresekPage />

@@ -12,16 +12,105 @@ function formatShortDate(dateStr) {
   return d.toLocaleDateString('hu-HU', { month: 'short', day: 'numeric' });
 }
 
+// A hírfolyam minden eleme (mérési körök + jelentések + tájékoztatók) egyetlen,
+// dátum szerint csökkenő sorrendbe rendezett listába kerül, hogy mindig a
+// legfrissebb esemény legyen elöl.
+function buildNewsEvents(measurements) {
+  const events = measurements.map((m, index) => {
+    const treated = m.results.filter((r) => r.status === 'treated').length;
+    const clean = m.results.filter((r) => r.status === 'clean').length;
+    const larvae = m.results.reduce((sum, r) => sum + r.larvae, 0);
+    const isNewest = index === 0;
+
+    return {
+      key: `meres-${m.id ?? m.surveyDate}`,
+      date: m.surveyDate,
+      displayDate: formatDate(m.surveyDate),
+      tag: 'Mérési eredmény',
+      extraTag: treated > 0 ? 'Kezelés történt' : null,
+      highlight: treated > 0,
+      title: `Monitoring jelentés – ${formatDate(m.surveyDate)}`,
+      body: m.summary,
+      // A legfrissebb körnél kiemeljük a számokat, a régebbieknél elég a szöveg.
+      stats: isNewest
+        ? [
+            { val: treated, lbl: 'kezelt helyszín' },
+            { val: clean, lbl: 'tiszta helyszín' },
+            { val: larvae, lbl: 'lárva összesen (db/0,5 l)' },
+          ]
+        : null,
+      linkTo: '/monitoring',
+      linkLabel: isNewest ? 'Részletes mérési adatok' : 'Mérési adatok megtekintése',
+    };
+  });
+
+  const adultDates = adultSpeciesMonitoring.records.map((r) => r.date).sort();
+  const adultLatest = adultDates[adultDates.length - 1];
+  const adultSpeciesCount = new Set(
+    adultSpeciesMonitoring.records.flatMap((r) => r.species.map((s) => s.name))
+  ).size;
+
+  events.push(
+    {
+      key: 'idoszakos-jelentes',
+      date: periodicReport.reportDate,
+      displayDate: formatDate(periodicReport.reportDate),
+      tag: 'Időszakos jelentés',
+      tagStyle: { background: 'var(--accent-light)', color: 'var(--accent)' },
+      title: periodicReport.title,
+      body:
+        'A NO MOSQUITO Kft. elkészítette a 2026-os szezon első időszakos jelentését. ' +
+        'Összefoglalja a március 24. és május 31. közötti monitoring eredményeket, ' +
+        'a fajbeazonosításokat és az ökológiai paraméterek alakulását.',
+      stats: [
+        { val: '98–100%', lbl: 'kezelési hatékonyság' },
+        { val: periodicReport.speciesIdentified.length, lbl: 'azonosított faj' },
+      ],
+      linkTo: '/monitoring',
+      linkLabel: 'Részletes jelentés megtekintése',
+    },
+    {
+      key: 'fajazonositas',
+      date: adultLatest,
+      displayDate: formatDate(adultLatest),
+      tag: 'Fajazonosítás',
+      title: adultSpeciesMonitoring.title,
+      body: adultSpeciesMonitoring.description,
+      stats: [
+        { val: adultSpeciesMonitoring.records.length, lbl: 'befogási esemény' },
+        { val: adultSpeciesCount, lbl: 'azonosított faj' },
+      ],
+      linkTo: '/monitoring',
+      linkLabel: 'Fajazonosítási adatok megtekintése',
+    },
+    {
+      key: 'gyik',
+      date: '2026-03-31',
+      displayDate: '2026. március',
+      tag: 'Tájékoztatás',
+      title: 'Gyakran ismételt kérdések a biológiai szúnyoggyérítésről',
+      body:
+        'A kérdőív kapcsán kiderült, hogy a válaszadók egy része nem tudja pontosan, ' +
+        'mit jelent a biológiai szúnyoggyérítés. Összeállítottunk egy tájékoztatót ' +
+        'a leggyakoribb kérdésekből.',
+      linkTo: '/gyik',
+      linkLabel: 'Gyakori kérdések',
+    }
+  );
+
+  return events.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
 export default function HomePage() {
   const measurements = useAllMeasurements();
   const latest = measurements[0];
-  const treatedCount = latest.results.filter((r) => r.status === 'treated').length;
   const cleanCount = latest.results.filter((r) => r.status === 'clean').length;
-  const totalLarvae = latest.results.reduce((sum, r) => sum + r.larvae, 0);
   const treatmentsSeason = measurements.reduce(
     (sum, m) => sum + m.results.filter((r) => r.status === 'treated').length,
     0
   );
+
+  const newsEvents = buildNewsEvents(measurements);
 
   return (
     <>
@@ -60,136 +149,40 @@ export default function HomePage() {
           </div>
 
           <div className="news-feed reveal-group">
-            <div className="news-card reveal">
-              <div className="news-card-accent" />
-              <div className="news-card-body">
-                <div className="news-card-meta">
-                  <span className="news-card-date">2026. május 31.</span>
-                  <span className="news-card-tag" style={{ background: 'var(--accent-light)', color: 'var(--accent)' }}>Időszakos jelentés</span>
-                </div>
-                <h3>{periodicReport.title}</h3>
-                <p>
-                  A NO MOSQUITO Kft. elkészítette a 2026-os szezon első időszakos jelentését.
-                  Összefoglalja a március 24. és május 31. közötti monitoring eredményeket,
-                  a fajbeazonosításokat és az ökológiai paraméterek alakulását.
-                </p>
-                <div className="news-card-stats">
-                  <div className="news-card-stat">
-                    <span className="val">98–100%</span>
-                    <span className="lbl">kezelési hatékonyság</span>
+            {newsEvents.map((event) => (
+              <div className="news-card reveal" key={event.key}>
+                <div className={`news-card-accent${event.highlight ? ' treated' : ''}`} />
+                <div className="news-card-body">
+                  <div className="news-card-meta">
+                    <span className="news-card-date">{event.displayDate}</span>
+                    <span className="news-card-tag" style={event.tagStyle}>{event.tag}</span>
+                    {event.extraTag && (
+                      <span
+                        className="news-card-tag"
+                        style={{ background: 'var(--accent-light)', color: 'var(--accent)' }}
+                      >
+                        {event.extraTag}
+                      </span>
+                    )}
                   </div>
-                  <div className="news-card-stat">
-                    <span className="val">3</span>
-                    <span className="lbl">azonosított faj</span>
-                  </div>
-                  <div className="news-card-stat">
-                    <span className="val">6</span>
-                    <span className="lbl">kezelés a szezonban</span>
-                  </div>
-                </div>
-                <Link to="/monitoring" className="news-card-link">
-                  Részletes jelentés megtekintése →
-                </Link>
-              </div>
-            </div>
-
-            <div className="news-card reveal">
-              <div className="news-card-accent" />
-              <div className="news-card-body">
-                <div className="news-card-meta">
-                  <span className="news-card-date">2026. június 18.</span>
-                  <span className="news-card-tag">Fajazonosítás</span>
-                </div>
-                <h3>{adultSpeciesMonitoring.title}</h3>
-                <p>{adultSpeciesMonitoring.description}</p>
-                <div className="news-card-stats">
-                  <div className="news-card-stat">
-                    <span className="val">{adultSpeciesMonitoring.records.length}</span>
-                    <span className="lbl">befogási esemény</span>
-                  </div>
-                  <div className="news-card-stat">
-                    <span className="val">2</span>
-                    <span className="lbl">azonosított faj</span>
-                  </div>
-                </div>
-                <Link to="/monitoring" className="news-card-link">
-                  Fajazonosítási adatok megtekintése →
-                </Link>
-              </div>
-            </div>
-
-            <div className="news-card reveal">
-              <div className={`news-card-accent${treatedCount > 0 ? ' treated' : ''}`} />
-              <div className="news-card-body">
-                <div className="news-card-meta">
-                  <span className="news-card-date">{formatDate(latest.surveyDate)}</span>
-                  <span className="news-card-tag">Mérési eredmény</span>
-                  {treatedCount > 0 && (
-                    <span className="news-card-tag" style={{ background: 'var(--accent-light)', color: 'var(--accent)' }}>
-                      Kezelés történt
-                    </span>
-                  )}
-                </div>
-                <h3>Monitoring jelentés – {formatDate(latest.surveyDate)}</h3>
-                <p>{latest.summary}</p>
-                <div className="news-card-stats">
-                  <div className="news-card-stat">
-                    <span className="val">{treatedCount}</span>
-                    <span className="lbl">kezelt helyszín</span>
-                  </div>
-                  <div className="news-card-stat">
-                    <span className="val">{cleanCount}</span>
-                    <span className="lbl">tiszta helyszín</span>
-                  </div>
-                  <div className="news-card-stat">
-                    <span className="val">{totalLarvae}</span>
-                    <span className="lbl">lárva összesen (db/0,5 l)</span>
-                  </div>
-                </div>
-                <Link to="/monitoring" className="news-card-link">
-                  Részletes mérési adatok →
-                </Link>
-              </div>
-            </div>
-
-            {measurements.slice(1).map((m) => {
-              const mTreated = m.results.filter((r) => r.status === 'treated').length;
-              return (
-                <div className="news-card reveal" key={m.surveyDate}>
-                  <div className={`news-card-accent${mTreated > 0 ? ' treated' : ''}`} />
-                  <div className="news-card-body">
-                    <div className="news-card-meta">
-                      <span className="news-card-date">{formatDate(m.surveyDate)}</span>
-                      <span className="news-card-tag">Mérési eredmény</span>
+                  <h3>{event.title}</h3>
+                  <p>{event.body}</p>
+                  {event.stats && (
+                    <div className="news-card-stats">
+                      {event.stats.map((stat) => (
+                        <div className="news-card-stat" key={stat.lbl}>
+                          <span className="val">{stat.val}</span>
+                          <span className="lbl">{stat.lbl}</span>
+                        </div>
+                      ))}
                     </div>
-                    <h3>Monitoring jelentés – {formatDate(m.surveyDate)}</h3>
-                    <p>{m.summary}</p>
-                    <Link to="/monitoring" className="news-card-link">
-                      Mérési adatok megtekintése →
-                    </Link>
-                  </div>
+                  )}
+                  <Link to={event.linkTo} className="news-card-link">
+                    {event.linkLabel} →
+                  </Link>
                 </div>
-              );
-            })}
-
-            <div className="news-card reveal">
-              <div className="news-card-accent" />
-              <div className="news-card-body">
-                <div className="news-card-meta">
-                  <span className="news-card-date">2026. március</span>
-                  <span className="news-card-tag">Tájékoztatás</span>
-                </div>
-                <h3>Gyakran ismételt kérdések a biológiai szúnyoggyérítésről</h3>
-                <p>
-                  A kérdőív kapcsán kiderült, hogy a válaszadók egy része nem tudja pontosan,
-                  mit jelent a biológiai szúnyoggyérítés. Összeállítottunk egy tájékoztatót
-                  a leggyakoribb kérdésekből.
-                </p>
-                <Link to="/gyik" className="news-card-link">
-                  Gyakori kérdések →
-                </Link>
               </div>
-            </div>
+            ))}
           </div>
 
           <div style={{ marginTop: '2rem' }}>

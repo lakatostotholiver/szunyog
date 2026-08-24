@@ -1,15 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../lib/adminAuth';
+import { ADMIN_ROUTES } from '../lib/adminRoutes';
 
 const sections = [
   {
-    to: '/admin/meresek',
+    to: ADMIN_ROUTES.meresek,
     title: 'Mérési körök',
     description:
       'Új bejárás felvitele a NO MOSQUITO jelentés alapján: helyszínenkénti lárvaszám, állapot, összefoglaló és PDF csatolása. Azonnal megjelenik a Főoldalon és a Mérések oldalon.',
   },
   {
-    to: '/admin/gocpont-kutatasok',
+    to: ADMIN_ROUTES.kutatasok,
     title: 'Gócpont-kutatások',
     description: 'Terepi csípésszámlálásos mérések rögzítése, szerkesztése és törlése – a Mérések oldalon jelenik meg.',
   },
@@ -20,7 +21,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/admin-belepes', { replace: true });
+    navigate(ADMIN_ROUTES.login, { replace: true });
   };
 
   return (
