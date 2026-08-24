@@ -31,8 +31,36 @@ function ensureLocal(key, fallback) {
   return file;
 }
 
+// A Vercel Blob írás után nem azonnal olvasható vissza: mérés szerint 1–2
+// másodpercig még a korábbi tartalom jön (a fetch cache-fejlécei ezen nem
+// segítenek, mert nem CDN-gyorsítótár okozza). Emiatt egy frissen mentett
+// bejegyzés azonnali szerkesztése/törlése "nem található" hibára futott, és a
+// lista sem mutatta a friss elemet.
+//
+// Ezért amit MI írtunk, azt rövid ideig memóriából szolgáljuk ki. Ez az adott
+// szerverpéldányon belül garantálja, hogy az olvasás lássa a saját írásunkat.
+const recentWrites = new Map();
+const WRITE_ECHO_MS = 20000;
+
+function rememberWrite(key, value) {
+  recentWrites.set(key, { value, at: Date.now() });
+}
+
+function recentWrite(key) {
+  const hit = recentWrites.get(key);
+  if (!hit) return null;
+  if (Date.now() - hit.at > WRITE_ECHO_MS) {
+    recentWrites.delete(key);
+    return null;
+  }
+  return hit.value;
+}
+
 export async function readJson(key, fallback = []) {
   if (blobEnabled()) {
+    const echoed = recentWrite(key);
+    if (echoed !== null) return echoed;
+
     try {
       const { blobs } = await list({ prefix: key, limit: 1 });
       const match = blobs.find((b) => b.pathname === key);
@@ -71,6 +99,8 @@ export async function writeJson(key, value) {
       allowOverwrite: true,
       cacheControlMaxAge: 0,
     });
+    // Amíg a Blob a friss tartalmat vissza nem adja, innen szolgáljuk ki.
+    rememberWrite(key, value);
     return value;
   }
 
