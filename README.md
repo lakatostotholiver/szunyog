@@ -139,6 +139,14 @@ A tárolás automatikusan vált a környezet szerint (`api/_lib/storage.js`):
 | Saját szerver / VPS (`node server.js`) | JSON fájlok a `DIKTALAS_DATA_DIR` mappában | ✅ igen |
 | Vercel, Blob token **nélkül** | ideiglenes fájlrendszer | ❌ **elveszik** |
 
+> **Ismert korlát – Blob késleltetés.** A Vercel Blob objektumtároló, nem adatbázis: írás után a
+> tartalom mérés szerint **~10 másodpercig** még a korábbi állapotot adhatja vissza egy MÁSIK
+> szerverfüggvénynek. A gyakori folyamatok emiatt nem romlanak el (a mentés utáni lista ugyanabban
+> a függvényben fut, és a szerver a saját írását 20 másodpercig memóriából szolgálja ki), de a
+> szekció → *Mentés és kuka* váltásnál pár másodperces csúszás előfordulhat; erre a *Frissítés*
+> gomb való. Ha ez zavaró, a végleges megoldás egy erősen konzisztens tároló (pl. Vercel KV /
+> Redis) az `api/_lib/storage.js` mögé.
+
 **Az éles oldalon ez már be van állítva:** a `szunyog-public` nevű, *public* hozzáférésű Blob store hozzá van csatolva a projekthez, a `BLOB_READ_WRITE_TOKEN` mindhárom környezetben megvan, és az adatok tartósan megmaradnak.
 
 > A store-nak **public** hozzáférésűnek kell lennie, mert a feltöltött PDF jelentéseket a lakosság is letölti a Mérések oldalról. Egy *private* store esetén a feltöltés hibára fut (`Cannot use public access on a private store`).

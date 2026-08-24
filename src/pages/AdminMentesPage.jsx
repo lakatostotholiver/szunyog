@@ -114,7 +114,17 @@ export default function AdminMentesPage() {
       <AdminPanel
         title={`Kuka (${trash.length})`}
         description={`A törölt bejegyzések ${retention} napig visszaállíthatók. A csatolt képek és PDF-ek is megmaradnak, amíg a bejegyzés a kukában van.`}
+        actions={
+          <button type="button" className="btn btn-outline btn-sm" onClick={load} disabled={loading}>
+            {loading ? 'Frissítés…' : 'Frissítés'}
+          </button>
+        }
       >
+        <p className="admin-hint" style={{ marginTop: 0 }}>
+          Az imént törölt bejegyzés néhány másodperc múlva jelenik meg itt – ha még nem
+          látod, kattints a <strong>Frissítés</strong> gombra.
+        </p>
+
         {loading ? (
           <p className="admin-empty">Betöltés…</p>
         ) : trash.length === 0 ? (
